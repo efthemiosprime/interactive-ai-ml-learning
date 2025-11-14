@@ -2572,6 +2572,232 @@ export default function AIMLApplicationsEducationalPanels({ selectedApplication 
           </div>
         </div>
       )}
+
+      {/* Recommendation System Tutorial */}
+      {selectedApplication === 'recommendation-system-tutorial' && (
+        <div>
+          <h3 className="text-xl font-bold text-gray-900 mb-4">About This Application</h3>
+          <div className="space-y-4 text-gray-700">
+            <p>
+              <strong>Recommendation System</strong> is a comprehensive tutorial that teaches you how to build 
+              AI-powered recommendation systems from scratch. This complete step-by-step guide covers collaborative 
+              filtering (user-based and item-based), matrix factorization, deep learning approaches, evaluation metrics, 
+              and complete system integration for e-commerce and movie recommendation platforms.
+            </p>
+
+            <div className="bg-blue-50 rounded-lg p-4 mb-4 border-2 border-blue-200">
+              <h4 className="font-semibold text-blue-900 mb-2">Tutorial Structure:</h4>
+              <ol className="list-decimal list-inside space-y-2 text-blue-800 text-sm">
+                <li><strong>Step 1 - Data Collection & Preprocessing:</strong> Load user-item interactions, create user-item matrix, handle sparsity</li>
+                <li><strong>Step 2 - User-Based Collaborative Filtering:</strong> Find similar users, predict ratings using cosine similarity</li>
+                <li><strong>Step 3 - Item-Based Collaborative Filtering:</strong> Find similar items, predict ratings using item similarity</li>
+                <li><strong>Step 4 - Matrix Factorization (SVD):</strong> Decompose matrix into latent factors, learn embeddings</li>
+                <li><strong>Step 5 - Deep Learning:</strong> Neural Collaborative Filtering with embeddings and MLP</li>
+                <li><strong>Step 6 - Evaluation Metrics:</strong> RMSE, MAE, Precision@K, Recall@K, F1@K, NDCG@K</li>
+                <li><strong>Step 7 - Complete Integration:</strong> Full recommendation system with hybrid approaches</li>
+              </ol>
+            </div>
+            
+            <h4 className="font-semibold text-gray-800 mb-2">Mathematical Formulas:</h4>
+            <div className="bg-gray-50 rounded-lg p-4 mb-4 space-y-4">
+              
+              {/* Cosine Similarity */}
+              <div>
+                <strong className="text-gray-800 text-base">1. Cosine Similarity:</strong>
+                <p className="text-gray-700 text-sm mt-1 font-mono">cos(θ) = (A · B) / (||A|| × ||B||)</p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><strong>Components:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li><strong>cos(θ)</strong>: Cosine similarity (0-1, where 1 = identical)</li>
+                    <li><strong>A · B</strong>: Dot product of vectors A and B</li>
+                    <li><strong>||A||</strong>: Magnitude (norm) of vector A</li>
+                    <li><strong>||B||</strong>: Magnitude (norm) of vector B</li>
+                  </ul>
+                  <p className="mt-2"><strong>Example with Numbers:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>User 1 ratings: A = [5, 4, 5, 0, 0]</li>
+                    <li>User 2 ratings: B = [3, 0, 4, 4, 0]</li>
+                    <li><strong>Step 1:</strong> Calculate dot product</li>
+                    <li className="ml-4">A · B = 5×3 + 4×0 + 5×4 + 0×4 + 0×0 = 15 + 0 + 20 + 0 + 0 = 35</li>
+                    <li><strong>Step 2:</strong> Calculate magnitudes</li>
+                    <li className="ml-4">||A|| = √(5² + 4² + 5² + 0² + 0²) = √(25 + 16 + 25) = √66 ≈ 8.12</li>
+                    <li className="ml-4">||B|| = √(3² + 0² + 4² + 4² + 0²) = √(9 + 0 + 16 + 16) = √41 ≈ 6.40</li>
+                    <li><strong>Step 3:</strong> Calculate cosine similarity</li>
+                    <li className="ml-4">cos(θ) = 35 / (8.12 × 6.40) = 35 / 51.97 ≈ 0.674</li>
+                    <li>Similarity of 0.674 indicates moderate similarity between users</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* User-Based Prediction */}
+              <div>
+                <strong className="text-gray-800 text-base">2. User-Based Prediction:</strong>
+                <p className="text-gray-700 text-sm mt-1 font-mono">r̂<sub>u,i</sub> = r̄<sub>u</sub> + Σ<sub>v∈N(u)</sub> sim(u,v) · (r<sub>v,i</sub> - r̄<sub>v</sub>) / Σ<sub>v∈N(u)</sub> |sim(u,v)|</p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><strong>Components:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li><strong>r̂<sub>u,i</sub></strong>: Predicted rating user u gives to item i</li>
+                    <li><strong>r̄<sub>u</sub></strong>: Average rating of user u</li>
+                    <li><strong>N(u)</strong>: Set of users similar to user u</li>
+                    <li><strong>sim(u,v)</strong>: Similarity between users u and v</li>
+                    <li><strong>r<sub>v,i</sub></strong>: Rating user v gave to item i</li>
+                    <li><strong>r̄<sub>v</sub></strong>: Average rating of user v</li>
+                  </ul>
+                  <p className="mt-2"><strong>Example with Numbers:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>User u average rating: r̄<sub>u</sub> = 4.0</li>
+                    <li>Similar users: v₁ (sim=0.8, rated item i as 5, avg=4.2), v₂ (sim=0.6, rated item i as 4, avg=3.8)</li>
+                    <li><strong>Step 1:</strong> Calculate weighted deviations</li>
+                    <li className="ml-4">v₁ contribution: 0.8 × (5 - 4.2) = 0.8 × 0.8 = 0.64</li>
+                    <li className="ml-4">v₂ contribution: 0.6 × (4 - 3.8) = 0.6 × 0.2 = 0.12</li>
+                    <li><strong>Step 2:</strong> Calculate denominator</li>
+                    <li className="ml-4">Σ|sim| = |0.8| + |0.6| = 1.4</li>
+                    <li><strong>Step 3:</strong> Calculate prediction</li>
+                    <li className="ml-4">r̂<sub>u,i</sub> = 4.0 + (0.64 + 0.12) / 1.4 = 4.0 + 0.54 = 4.54</li>
+                    <li>Predicted rating is 4.54 (rounded to 4.5)</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Matrix Factorization */}
+              <div>
+                <strong className="text-gray-800 text-base">3. Matrix Factorization (SVD):</strong>
+                <p className="text-gray-700 text-sm mt-1 font-mono">R ≈ U × S × V<sup>T</sup></p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">r̂<sub>u,i</sub> = U[u] · S · V[i]<sup>T</sup></p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><strong>Components:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li><strong>R</strong>: User-Item matrix (m × n)</li>
+                    <li><strong>U</strong>: User embeddings matrix (m × k)</li>
+                    <li><strong>S</strong>: Singular values (diagonal matrix, k × k)</li>
+                    <li><strong>V<sup>T</sup></strong>: Item embeddings matrix (k × n)</li>
+                    <li><strong>k</strong>: Number of latent factors (k &lt;&lt; min(m, n))</li>
+                  </ul>
+                  <p className="mt-2"><strong>Example with Numbers:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>User embedding U[1] = [0.8, 0.6, 0.2] (3 latent factors)</li>
+                    <li>Item embedding V[104] = [0.9, 0.7, 0.3]</li>
+                    <li>Singular values S = diag([2.5, 1.8, 1.2])</li>
+                    <li><strong>Step 1:</strong> Calculate U[1] · S</li>
+                    <li className="ml-4">U[1] · S = [0.8, 0.6, 0.2] × diag([2.5, 1.8, 1.2])</li>
+                    <li className="ml-4">= [0.8×2.5, 0.6×1.8, 0.2×1.2] = [2.0, 1.08, 0.24]</li>
+                    <li><strong>Step 2:</strong> Multiply by item embedding</li>
+                    <li className="ml-4">r̂ = [2.0, 1.08, 0.24] · [0.9, 0.7, 0.3]<sup>T</sup></li>
+                    <li className="ml-4">r̂ = 2.0×0.9 + 1.08×0.7 + 0.24×0.3 = 1.8 + 0.756 + 0.072 = 2.628</li>
+                    <li>After scaling: predicted rating ≈ 4.1</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Precision@K */}
+              <div>
+                <strong className="text-gray-800 text-base">4. Precision@K:</strong>
+                <p className="text-gray-700 text-sm mt-1 font-mono">Precision@K = |Relevant items in top-K| / K</p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><strong>Components:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li><strong>Precision@K</strong>: Fraction of recommended items that are relevant</li>
+                    <li><strong>Relevant items</strong>: Items user rated highly (e.g., rating ≥ 4)</li>
+                    <li><strong>top-K</strong>: Top K recommended items</li>
+                    <li><strong>K</strong>: Number of recommendations</li>
+                  </ul>
+                  <p className="mt-2"><strong>Example with Numbers:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>User's relevant items (rating ≥ 4): Movies 101, 102, 104</li>
+                    <li>Top-5 recommendations: [104, 101, 106, 107, 102]</li>
+                    <li><strong>Step 1:</strong> Count relevant items in top-K</li>
+                    <li className="ml-4">Relevant in top-5: Movies 104, 101, 102 = 3 items</li>
+                    <li><strong>Step 2:</strong> Calculate Precision@5</li>
+                    <li className="ml-4">Precision@5 = 3 / 5 = 0.6 (60%)</li>
+                    <li>60% of recommendations are relevant to the user</li>
+                    <li>Higher precision = Better recommendations</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Recall@K */}
+              <div>
+                <strong className="text-gray-800 text-base">5. Recall@K:</strong>
+                <p className="text-gray-700 text-sm mt-1 font-mono">Recall@K = |Relevant items in top-K| / |All relevant items|</p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><strong>Components:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li><strong>Recall@K</strong>: Fraction of relevant items that are recommended</li>
+                    <li><strong>Relevant items in top-K</strong>: Relevant items found in recommendations</li>
+                    <li><strong>All relevant items</strong>: Total number of relevant items user has</li>
+                  </ul>
+                  <p className="mt-2"><strong>Example with Numbers:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>User's all relevant items: Movies 101, 102, 103, 104, 105 = 5 items</li>
+                    <li>Top-3 recommendations: [104, 101, 106]</li>
+                    <li><strong>Step 1:</strong> Count relevant items in top-K</li>
+                    <li className="ml-4">Relevant in top-3: Movies 104, 101 = 2 items</li>
+                    <li><strong>Step 2:</strong> Calculate Recall@3</li>
+                    <li className="ml-4">Recall@3 = 2 / 5 = 0.4 (40%)</li>
+                    <li>System found 40% of all relevant items in top-3 recommendations</li>
+                    <li>Higher recall = System finds more relevant items</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* NDCG@K */}
+              <div>
+                <strong className="text-gray-800 text-base">6. NDCG@K (Normalized Discounted Cumulative Gain):</strong>
+                <p className="text-gray-700 text-sm mt-1 font-mono">NDCG@K = DCG@K / IDCG@K</p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">where DCG@K = Σ<sub>i=1</sub><sup>K</sup> rel(i) / log₂(i+1)</p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><strong>Components:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li><strong>NDCG@K</strong>: Normalized ranking quality metric (0-1)</li>
+                    <li><strong>DCG@K</strong>: Discounted Cumulative Gain</li>
+                    <li><strong>IDCG@K</strong>: Ideal DCG (perfect ranking)</li>
+                    <li><strong>rel(i)</strong>: Relevance score at position i</li>
+                    <li><strong>log₂(i+1)</strong>: Discount factor (reduces weight of lower positions)</li>
+                  </ul>
+                  <p className="mt-2"><strong>Example with Numbers:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>True ratings: Movie 101 = 5, Movie 102 = 4, Movie 103 = 3</li>
+                    <li>Predicted order: [101, 103, 102]</li>
+                    <li><strong>Step 1:</strong> Calculate DCG@3</li>
+                    <li className="ml-4">DCG = 5/log₂(2) + 3/log₂(3) + 4/log₂(4)</li>
+                    <li className="ml-4">DCG = 5/1 + 3/1.585 + 4/2 = 5 + 1.893 + 2 = 8.893</li>
+                    <li><strong>Step 2:</strong> Calculate IDCG@3 (ideal order: [101, 102, 103])</li>
+                    <li className="ml-4">IDCG = 5/log₂(2) + 4/log₂(3) + 3/log₂(4)</li>
+                    <li className="ml-4">IDCG = 5/1 + 4/1.585 + 3/2 = 5 + 2.524 + 1.5 = 9.024</li>
+                    <li><strong>Step 3:</strong> Calculate NDCG@3</li>
+                    <li className="ml-4">NDCG@3 = 8.893 / 9.024 ≈ 0.986</li>
+                    <li>NDCG of 0.986 indicates excellent ranking quality</li>
+                    <li>NDCG = 1.0 means perfect ranking</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+
+            <h4 className="font-semibold text-gray-800 mb-2">Concepts Used:</h4>
+            <ul className="list-disc list-inside space-y-2 text-gray-700 mb-4">
+              <li><strong>Linear Algebra:</strong> Matrix operations, vector similarity, matrix factorization</li>
+              <li><strong>Collaborative Filtering:</strong> User-based and item-based approaches</li>
+              <li><strong>Matrix Factorization:</strong> SVD, latent factor models, embeddings</li>
+              <li><strong>Deep Learning:</strong> Neural Collaborative Filtering, embeddings, MLP</li>
+              <li><strong>Evaluation Metrics:</strong> RMSE, MAE, Precision@K, Recall@K, F1@K, NDCG@K</li>
+              <li><strong>Statistics:</strong> Cosine similarity, Pearson correlation, sparsity analysis</li>
+              <li><strong>Hybrid Systems:</strong> Combining multiple recommendation approaches</li>
+            </ul>
+
+            <h4 className="font-semibold text-gray-800 mb-2">Real-World Applications:</h4>
+            <ul className="list-disc list-inside space-y-2 text-gray-700">
+              <li>E-commerce platforms (Amazon, eBay)</li>
+              <li>Streaming services (Netflix, Spotify, YouTube)</li>
+              <li>Social media (Facebook, Instagram, Twitter)</li>
+              <li>News and content platforms</li>
+              <li>Job recommendation systems</li>
+              <li>Dating apps</li>
+              <li>Product recommendation engines</li>
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

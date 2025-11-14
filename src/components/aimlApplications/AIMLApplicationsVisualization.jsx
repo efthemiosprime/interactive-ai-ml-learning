@@ -22,6 +22,7 @@ import PCAVisualization from './PCAVisualization';
 import ConvolutionVisualization from './ConvolutionVisualization';
 import KMeansClusteringVisualization from './KMeansClusteringVisualization';
 import TradingToolsTutorial from './TradingToolsTutorial';
+import RecommendationSystemTutorial from './RecommendationSystemTutorial';
 
 export default function AIMLApplicationsVisualization({ selectedApplication }) {
   return (
@@ -118,6 +119,10 @@ export default function AIMLApplicationsVisualization({ selectedApplication }) {
 
       {selectedApplication === 'trading-tools' && (
         <TradingToolsTutorial />
+      )}
+
+      {selectedApplication === 'recommendation-system-tutorial' && (
+        <RecommendationSystemTutorial />
       )}
     </div>
   );

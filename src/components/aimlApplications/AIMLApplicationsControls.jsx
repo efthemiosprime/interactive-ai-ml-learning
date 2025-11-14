@@ -27,7 +27,8 @@ export default function AIMLApplicationsControls({
     { id: 'pca-visualization', label: 'PCA Visualization', icon: '🔍' },
     { id: 'convolution-visualization', label: 'Convolution Operation Visualization', icon: '🔄' },
     { id: 'k-means-clustering', label: 'K-Means Clustering Visualization', icon: '🎯' },
-    { id: 'trading-tools', label: 'AI Trading Tools (Complete Tutorial)', icon: '📊' }
+    { id: 'trading-tools', label: 'AI Trading Tools (Complete Tutorial)', icon: '📊' },
+    { id: 'recommendation-system-tutorial', label: 'Recommendation System (Complete Tutorial)', icon: '⭐' }
   ];
 
   return (
@@ -280,6 +281,15 @@ export default function AIMLApplicationsControls({
               <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Reinforcement Learning</span>
               <span className="px-2 py-1 bg-violet-100 text-violet-800 rounded text-xs">Technical Indicators</span>
               <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Risk Management</span>
+            </>
+          )}
+          {selectedApplication === 'recommendation-system-tutorial' && (
+            <>
+              <span className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs">Linear Algebra</span>
+              <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs">Collaborative Filtering</span>
+              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Matrix Factorization</span>
+              <span className="px-2 py-1 bg-violet-100 text-violet-800 rounded text-xs">Deep Learning</span>
+              <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">Evaluation Metrics</span>
             </>
           )}
         </div>
