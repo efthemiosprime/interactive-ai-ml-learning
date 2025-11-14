@@ -128,7 +128,7 @@ export default function AIMLApplicationsEducationalPanels({ selectedApplication 
               </div>
               <div>
                 <strong className="text-gray-800">LSTM Cell:</strong>
-                <p className="text-gray-700 text-sm mt-1 font-mono">h_t = LSTM(x_t, h_{t-1}, c_{t-1})</p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">h<sub>t</sub> = LSTM(x<sub>t</sub>, h<sub>{'{'}t-1{'}'}</sub>, c<sub>{'{'}t-1{'}'}</sub>)</p>
                 <p className="text-gray-600 text-xs mt-1">Processes sequential text with memory</p>
               </div>
               <div>
@@ -276,17 +276,17 @@ export default function AIMLApplicationsEducationalPanels({ selectedApplication 
             <div className="bg-gray-50 rounded-lg p-4 mb-4 space-y-3">
               <div>
                 <strong className="text-gray-800">LSTM Cell:</strong>
-                <p className="text-gray-700 text-sm mt-1 font-mono">h_t = LSTM(x_t, h_{t-1}, c_{t-1})</p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">h<sub>t</sub> = LSTM(x<sub>t</sub>, h<sub>{'{'}t-1{'}'}</sub>, c<sub>{'{'}t-1{'}'}</sub>)</p>
                 <p className="text-gray-600 text-xs mt-1">Processes time series sequences</p>
               </div>
               <div>
                 <strong className="text-gray-800">Prediction:</strong>
-                <p className="text-gray-700 text-sm mt-1 font-mono">ŷ_{t+1} = f(h_t)</p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">ŷ<sub>{'{'}t+1{'}'}</sub> = f(h<sub>t</sub>)</p>
                 <p className="text-gray-600 text-xs mt-1">Forecasts next time step</p>
               </div>
               <div>
                 <strong className="text-gray-800">Mean Squared Error:</strong>
-                <p className="text-gray-700 text-sm mt-1 font-mono">MSE = (1/T) Σ(ŷ_t - y_t)²</p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">MSE = (1/T) Σ(ŷ<sub>t</sub> - y<sub>t</sub>)²</p>
                 <p className="text-gray-600 text-xs mt-1">Loss function for time series</p>
               </div>
               <div>
@@ -428,7 +428,7 @@ export default function AIMLApplicationsEducationalPanels({ selectedApplication 
             <div className="bg-gray-50 rounded-lg p-4 mb-4 space-y-3">
               <div>
                 <strong className="text-gray-800">Next-Word Probability:</strong>
-                <p className="text-gray-700 text-sm mt-1 font-mono">P(w_t | w_{t-1}, ..., w_1)</p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">P(w<sub>t</sub> | w<sub>{'{'}t-1{'}'}</sub>, ..., w<sub>1</sub>)</p>
                 <p className="text-gray-600 text-xs mt-1">Probability of next word given context</p>
               </div>
               <div>
@@ -595,7 +595,7 @@ export default function AIMLApplicationsEducationalPanels({ selectedApplication 
               </div>
               <div>
                 <strong className="text-gray-800">Diffusion Process:</strong>
-                <p className="text-gray-700 text-sm mt-1 font-mono">q(x_t | x_{t-1}) = N(x_t; √(1-β_t)x_{t-1}, β_t I)</p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">q(x<sub>t</sub> | x<sub>{'{'}t-1{'}'}</sub>) = N(x<sub>t</sub>; √(1-β<sub>t</sub>)x<sub>{'{'}t-1{'}'}</sub>, β<sub>t</sub> I)</p>
                 <p className="text-gray-600 text-xs mt-1">Forward diffusion adds noise</p>
               </div>
             </div>
@@ -667,7 +667,7 @@ export default function AIMLApplicationsEducationalPanels({ selectedApplication 
               </div>
               <div>
                 <strong className="text-gray-800">LSTM:</strong>
-                <p className="text-gray-700 text-sm mt-1 font-mono">h_t = LSTM(MFCC_t, h_{t-1})</p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">h<sub>t</sub> = LSTM(MFCC<sub>t</sub>, h<sub>{'{'}t-1{'}'}</sub>)</p>
                 <p className="text-gray-600 text-xs mt-1">Processes audio sequence</p>
               </div>
               <div>
@@ -745,7 +745,7 @@ export default function AIMLApplicationsEducationalPanels({ selectedApplication 
               </div>
               <div>
                 <strong className="text-gray-800">Decoder:</strong>
-                <p className="text-gray-700 text-sm mt-1 font-mono">target_t = Decoder(E, target_{t-1})</p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">target<sub>t</sub> = Decoder(E, target<sub>{'{'}t-1{'}'}</sub>)</p>
                 <p className="text-gray-600 text-xs mt-1">Generates target language</p>
               </div>
               <div>
@@ -2366,6 +2366,208 @@ export default function AIMLApplicationsEducationalPanels({ selectedApplication 
               <li>Document clustering</li>
               <li>Anomaly detection</li>
               <li>Data preprocessing for other ML algorithms</li>
+            </ul>
+          </div>
+        </div>
+      )}
+
+      {/* Trading Tools Tutorial */}
+      {selectedApplication === 'trading-tools' && (
+        <div>
+          <h3 className="text-xl font-bold text-gray-900 mb-4">About This Application</h3>
+          <div className="space-y-4 text-gray-700">
+            <p>
+              <strong>AI Trading Tools</strong> is a comprehensive tutorial that teaches you how to build 
+              AI-powered trading systems from scratch. This complete step-by-step guide covers everything from 
+              data collection to deploying a fully integrated trading system.
+            </p>
+
+            <div className="bg-green-50 rounded-lg p-4 mb-4 border-2 border-green-200">
+              <h4 className="font-semibold text-green-900 mb-2">Tutorial Structure:</h4>
+              <ol className="list-decimal list-inside space-y-2 text-green-800 text-sm">
+                <li><strong>Step 1 - Data Collection & Preprocessing:</strong> Fetch stock data, clean missing values, normalize features</li>
+                <li><strong>Step 2 - Technical Indicators:</strong> Calculate SMA, EMA, RSI, MACD, Bollinger Bands, Stochastic Oscillator</li>
+                <li><strong>Step 3 - Feature Engineering:</strong> Create sequences for time series, split train/val/test sets</li>
+                <li><strong>Step 4 - LSTM Price Prediction:</strong> Build and train LSTM neural network for price forecasting</li>
+                <li><strong>Step 5 - RL Trading Strategy:</strong> Implement DQN agent to learn optimal trading actions</li>
+                <li><strong>Step 6 - Risk Management:</strong> Position sizing, stop-loss, performance metrics (Sharpe, Sortino, Max Drawdown)</li>
+                <li><strong>Step 7 - Complete Integration:</strong> Full trading system combining all components</li>
+              </ol>
+            </div>
+            
+            <h4 className="font-semibold text-gray-800 mb-2">Mathematical Formulas:</h4>
+            <div className="bg-gray-50 rounded-lg p-4 mb-4 space-y-4">
+              
+              {/* Simple Moving Average */}
+              <div>
+                <strong className="text-gray-800 text-base">1. Simple Moving Average (SMA):</strong>
+                <p className="text-gray-700 text-sm mt-1 font-mono">SMA(n) = (P₁ + P₂ + ... + Pₙ) / n</p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><strong>Components:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li><strong>SMA(n)</strong>: Simple Moving Average over n periods</li>
+                    <li><strong>Pᵢ</strong>: Price at time i</li>
+                    <li><strong>n</strong>: Window size (number of periods)</li>
+                    <li><strong>/</strong>: Division (average calculation)</li>
+                  </ul>
+                  <p className="mt-2"><strong>Example with Numbers:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>Prices over 5 days: P₁ = 100, P₂ = 102, P₃ = 101, P₄ = 103, P₅ = 105</li>
+                    <li><strong>Step 1:</strong> Sum all prices</li>
+                    <li className="ml-4">Sum = 100 + 102 + 101 + 103 + 105 = 511</li>
+                    <li><strong>Step 2:</strong> Divide by number of periods (n = 5)</li>
+                    <li className="ml-4">SMA(5) = 511 / 5 = 102.2</li>
+                    <li>SMA smooths out price fluctuations to show trend</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Exponential Moving Average */}
+              <div>
+                <strong className="text-gray-800 text-base">2. Exponential Moving Average (EMA):</strong>
+                <p className="text-gray-700 text-sm mt-1 font-mono">EMA(t) = α · P(t) + (1-α) · EMA(t-1)</p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">where α = 2/(n+1)</p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><strong>Components:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li><strong>EMA(t)</strong>: Exponential Moving Average at time t</li>
+                    <li><strong>α</strong>: Smoothing factor (weight for current price)</li>
+                    <li><strong>P(t)</strong>: Current price</li>
+                    <li><strong>EMA(t-1)</strong>: Previous EMA value</li>
+                    <li><strong>n</strong>: Window size</li>
+                  </ul>
+                  <p className="mt-2"><strong>Example with Numbers:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>Window size: n = 12</li>
+                    <li><strong>Step 1:</strong> Calculate smoothing factor</li>
+                    <li className="ml-4">α = 2/(12+1) = 2/13 = 0.154</li>
+                    <li><strong>Step 2:</strong> Initialize EMA (use SMA for first value)</li>
+                    <li className="ml-4">EMA(0) = 100 (first price)</li>
+                    <li><strong>Step 3:</strong> Calculate EMA for next period</li>
+                    <li className="ml-4">If P(1) = 102, EMA(0) = 100</li>
+                    <li className="ml-4">EMA(1) = 0.154 × 102 + (1-0.154) × 100</li>
+                    <li className="ml-4">EMA(1) = 15.708 + 84.6 = 100.308</li>
+                    <li>EMA gives more weight to recent prices than SMA</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* RSI */}
+              <div>
+                <strong className="text-gray-800 text-base">3. Relative Strength Index (RSI):</strong>
+                <p className="text-gray-700 text-sm mt-1 font-mono">RSI = 100 - (100 / (1 + RS))</p>
+                <p className="text-gray-700 text-sm mt-1 font-mono">where RS = Average Gain / Average Loss</p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><strong>Components:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li><strong>RSI</strong>: Relative Strength Index (0-100)</li>
+                    <li><strong>RS</strong>: Relative Strength (ratio of gains to losses)</li>
+                    <li><strong>Average Gain</strong>: Average of positive price changes over n periods</li>
+                    <li><strong>Average Loss</strong>: Average of negative price changes over n periods</li>
+                  </ul>
+                  <p className="mt-2"><strong>Example with Numbers:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>14-day period: Gains = [+2, +1, +3, +1, +2] (average = 1.8)</li>
+                    <li>Losses = [-1, -2, -1] (average = -1.33, use absolute: 1.33)</li>
+                    <li><strong>Step 1:</strong> Calculate RS</li>
+                    <li className="ml-4">RS = Average Gain / Average Loss = 1.8 / 1.33 = 1.35</li>
+                    <li><strong>Step 2:</strong> Calculate RSI</li>
+                    <li className="ml-4">RSI = 100 - (100 / (1 + 1.35))</li>
+                    <li className="ml-4">RSI = 100 - (100 / 2.35)</li>
+                    <li className="ml-4">RSI = 100 - 42.55 = 57.45</li>
+                    <li>RSI &gt; 70: Overbought (potential sell signal)</li>
+                    <li>RSI &lt; 30: Oversold (potential buy signal)</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Sharpe Ratio */}
+              <div>
+                <strong className="text-gray-800 text-base">4. Sharpe Ratio:</strong>
+                <p className="text-gray-700 text-sm mt-1 font-mono">Sharpe = (Mean Return - Risk-Free Rate) / Std(Returns) × √252</p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><strong>Components:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li><strong>Sharpe</strong>: Risk-adjusted return metric</li>
+                    <li><strong>Mean Return</strong>: Average daily return</li>
+                    <li><strong>Risk-Free Rate</strong>: Risk-free interest rate (e.g., 2% annually)</li>
+                    <li><strong>Std(Returns)</strong>: Standard deviation of returns (volatility)</li>
+                    <li><strong>√252</strong>: Annualization factor (252 trading days per year)</li>
+                  </ul>
+                  <p className="mt-2"><strong>Example with Numbers:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>Daily returns: [0.01, 0.02, -0.01, 0.015, 0.005]</li>
+                    <li>Risk-free rate: 2% annually = 0.02/252 = 0.000079 daily</li>
+                    <li><strong>Step 1:</strong> Calculate mean return</li>
+                    <li className="ml-4">Mean Return = (0.01 + 0.02 - 0.01 + 0.015 + 0.005) / 5 = 0.01</li>
+                    <li><strong>Step 2:</strong> Calculate standard deviation</li>
+                    <li className="ml-4">Std = 0.008 (example value)</li>
+                    <li><strong>Step 3:</strong> Calculate Sharpe Ratio</li>
+                    <li className="ml-4">Excess Return = 0.01 - 0.000079 = 0.009921</li>
+                    <li className="ml-4">Sharpe = (0.009921 / 0.008) × √252</li>
+                    <li className="ml-4">Sharpe = 1.24 × 15.87 = 19.68</li>
+                    <li>Higher Sharpe = Better risk-adjusted returns</li>
+                    <li>Sharpe &gt; 1: Good, &gt; 2: Very good, &gt; 3: Excellent</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Q-Learning Update */}
+              <div>
+                <strong className="text-gray-800 text-base">5. Q-Learning Update:</strong>
+                <p className="text-gray-700 text-sm mt-1 font-mono">Q(s, a) ← Q(s, a) + α[r + γ·max Q(s', a') - Q(s, a)]</p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><strong>Components:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li><strong>Q(s, a)</strong>: Action-value function (expected future reward)</li>
+                    <li><strong>α</strong>: Learning rate (step size, e.g., 0.001)</li>
+                    <li><strong>r</strong>: Immediate reward from taking action a in state s</li>
+                    <li><strong>γ</strong>: Discount factor (future reward importance, e.g., 0.95)</li>
+                    <li><strong>max Q(s', a')</strong>: Maximum Q-value in next state s'</li>
+                    <li><strong>←</strong>: Update assignment</li>
+                  </ul>
+                  <p className="mt-2"><strong>Example with Numbers:</strong></p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>Current state s: Stock price = 100, RSI = 50, Portfolio value = 10000</li>
+                    <li>Action a: Buy</li>
+                    <li>Current Q(s, a) = 0.5</li>
+                    <li>Immediate reward r = 0.02 (2% gain)</li>
+                    <li>Learning rate α = 0.1, Discount factor γ = 0.95</li>
+                    <li>Next state s': Stock price = 102, RSI = 55, Portfolio value = 10200</li>
+                    <li>Max Q(s', a') = max(Q(s', Buy), Q(s', Sell), Q(s', Hold)) = 0.8</li>
+                    <li><strong>Step 1:</strong> Calculate target Q-value</li>
+                    <li className="ml-4">Target = r + γ·max Q(s', a') = 0.02 + 0.95 × 0.8 = 0.02 + 0.76 = 0.78</li>
+                    <li><strong>Step 2:</strong> Calculate error</li>
+                    <li className="ml-4">Error = Target - Q(s, a) = 0.78 - 0.5 = 0.28</li>
+                    <li><strong>Step 3:</strong> Update Q-value</li>
+                    <li className="ml-4">Q(s, a) ← 0.5 + 0.1 × 0.28 = 0.5 + 0.028 = 0.528</li>
+                    <li>Q-value increases, agent learns that buying in this state is beneficial</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+
+            <h4 className="font-semibold text-gray-800 mb-2">Concepts Used:</h4>
+            <ul className="list-disc list-inside space-y-2 text-gray-700 mb-4">
+              <li><strong>Time Series Analysis:</strong> Sequential data processing, trend identification</li>
+              <li><strong>Technical Indicators:</strong> Mathematical formulas for market analysis (SMA, EMA, RSI, MACD)</li>
+              <li><strong>LSTM Neural Networks:</strong> Long Short-Term Memory for sequence prediction</li>
+              <li><strong>Reinforcement Learning:</strong> Q-Learning, DQN for strategy optimization</li>
+              <li><strong>Risk Management:</strong> Position sizing, stop-loss, performance metrics</li>
+              <li><strong>Statistics:</strong> Sharpe ratio, Sortino ratio, maximum drawdown</li>
+              <li><strong>Backtesting:</strong> Historical strategy evaluation</li>
+            </ul>
+
+            <h4 className="font-semibold text-gray-800 mb-2">Real-World Applications:</h4>
+            <ul className="list-disc list-inside space-y-2 text-gray-700">
+              <li>Algorithmic trading systems</li>
+              <li>Portfolio optimization</li>
+              <li>Risk management for financial institutions</li>
+              <li>Automated trading bots</li>
+              <li>Market prediction and forecasting</li>
+              <li>Cryptocurrency trading</li>
+              <li>Forex trading strategies</li>
             </ul>
           </div>
         </div>

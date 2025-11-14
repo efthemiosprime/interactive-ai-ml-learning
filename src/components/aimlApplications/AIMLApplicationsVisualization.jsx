@@ -21,6 +21,7 @@ import LinearRegressionVisualization from './LinearRegressionVisualization';
 import PCAVisualization from './PCAVisualization';
 import ConvolutionVisualization from './ConvolutionVisualization';
 import KMeansClusteringVisualization from './KMeansClusteringVisualization';
+import TradingToolsTutorial from './TradingToolsTutorial';
 
 export default function AIMLApplicationsVisualization({ selectedApplication }) {
   return (
@@ -113,6 +114,10 @@ export default function AIMLApplicationsVisualization({ selectedApplication }) {
 
       {selectedApplication === 'k-means-clustering' && (
         <KMeansClusteringVisualization />
+      )}
+
+      {selectedApplication === 'trading-tools' && (
+        <TradingToolsTutorial />
       )}
     </div>
   );
