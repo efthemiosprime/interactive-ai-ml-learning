@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Zap, Eye, EyeOff } from 'lucide-react';
 
 export default function InteractiveWeightVisualization() {
   const [hoveredWeight, setHoveredWeight] = useState(null);
   const [selectedLayer, setSelectedLayer] = useState(0);
   const [showValues, setShowValues] = useState(true);
+  const canvasRef = useRef(null);
 
   // Example: 3-layer network: 4 inputs -> 3 hidden -> 2 outputs
   const layers = [
@@ -29,6 +30,181 @@ export default function InteractiveWeightVisualization() {
   const getWeightValue = (layerIdx, fromNeuron, toNeuron) => {
     return weightMatrices[layerIdx][toNeuron][fromNeuron];
   };
+
+  // Canvas visualization of weight matrix as heatmap
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    const displayWidth = rect.width > 0 ? rect.width : 600;
+    const displayHeight = rect.height > 0 ? rect.height : 400;
+
+    canvas.width = displayWidth * dpr;
+    canvas.height = displayHeight * dpr;
+    ctx.scale(dpr, dpr);
+
+    const width = displayWidth;
+    const height = displayHeight;
+    const padding = { top: 50, right: 40, bottom: 50, left: 60 };
+    const chartWidth = width - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
+
+    // Clear canvas
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, width, height);
+
+    const currentWeights = weightMatrices[selectedLayer];
+    const rows = currentWeights.length;
+    const cols = currentWeights[0].length;
+    const cellWidth = chartWidth / cols;
+    const cellHeight = chartHeight / rows;
+
+    // Find min/max for normalization
+    let minWeight = Infinity;
+    let maxWeight = -Infinity;
+    currentWeights.forEach(row => {
+      row.forEach(w => {
+        minWeight = Math.min(minWeight, w);
+        maxWeight = Math.max(maxWeight, w);
+      });
+    });
+    const range = maxWeight - minWeight || 1;
+
+    // Draw grid
+    ctx.strokeStyle = '#e5e7eb';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= cols; i++) {
+      const x = padding.left + i * cellWidth;
+      ctx.beginPath();
+      ctx.moveTo(x, padding.top);
+      ctx.lineTo(x, height - padding.bottom);
+      ctx.stroke();
+    }
+    for (let i = 0; i <= rows; i++) {
+      const y = padding.top + i * cellHeight;
+      ctx.beginPath();
+      ctx.moveTo(padding.left, y);
+      ctx.lineTo(width - padding.right, y);
+      ctx.stroke();
+    }
+
+    // Draw weight matrix cells
+    currentWeights.forEach((row, rowIdx) => {
+      row.forEach((weight, colIdx) => {
+        const x = padding.left + colIdx * cellWidth;
+        const y = padding.top + rowIdx * cellHeight;
+        const normalizedWeight = (weight - minWeight) / range;
+        
+        // Color: green for positive, red for negative
+        let r, g, b;
+        if (weight >= 0) {
+          r = Math.floor(16 + normalizedWeight * 239);
+          g = Math.floor(185 + normalizedWeight * 70);
+          b = Math.floor(129 + normalizedWeight * 126);
+        } else {
+          r = Math.floor(239 - normalizedWeight * 223);
+          g = Math.floor(68 - normalizedWeight * 68);
+          b = Math.floor(68 - normalizedWeight * 68);
+        }
+        
+        const weightKey = `${selectedLayer}-${colIdx}-${rowIdx}`;
+        const isHovered = hoveredWeight === weightKey;
+        
+        // Draw cell
+        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+        ctx.fillRect(x + 1, y + 1, cellWidth - 2, cellHeight - 2);
+        
+        // Highlight hovered cell
+        if (isHovered) {
+          ctx.strokeStyle = '#fbbf24';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(x + 1, y + 1, cellWidth - 2, cellHeight - 2);
+        }
+
+        // Draw weight value
+        if (showValues) {
+          ctx.fillStyle = Math.abs(weight) > 0.5 ? '#ffffff' : '#1f2937';
+          ctx.font = 'bold 11px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(
+            weight.toFixed(2),
+            x + cellWidth / 2,
+            y + cellHeight / 2 + 4
+          );
+        }
+      });
+    });
+
+    // Draw labels
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '12px sans-serif';
+    ctx.textAlign = 'center';
+    
+    // Column labels (input neurons)
+    for (let i = 0; i < cols; i++) {
+      ctx.fillText(
+        layers[selectedLayer].neurons[i] || `x${i + 1}`,
+        padding.left + i * cellWidth + cellWidth / 2,
+        padding.top - 15
+      );
+    }
+    
+    // Row labels (output neurons)
+    ctx.textAlign = 'right';
+    for (let i = 0; i < rows; i++) {
+      ctx.fillText(
+        layers[selectedLayer + 1].neurons[i] || `h${i + 1}`,
+        padding.left - 10,
+        padding.top + i * cellHeight + cellHeight / 2 + 4
+      );
+    }
+
+    // Title
+    ctx.fillStyle = '#1f2937';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(
+      `Weight Matrix W${selectedLayer + 1} (${rows}×${cols})`,
+      width / 2,
+      25
+    );
+
+    // Legend
+    ctx.textAlign = 'left';
+    ctx.font = '11px sans-serif';
+    ctx.fillText('Weight Value:', padding.left, height - 25);
+    
+    // Color scale
+    const scaleWidth = 150;
+    const scaleX = padding.left + 100;
+    const scaleY = height - 20;
+    const scaleHeight = 8;
+    
+    // Positive scale (green)
+    const positiveGradient = ctx.createLinearGradient(scaleX, scaleY, scaleX + scaleWidth / 2, scaleY);
+    positiveGradient.addColorStop(0, 'rgb(16, 185, 129)');
+    positiveGradient.addColorStop(1, 'rgb(239, 68, 68)');
+    ctx.fillStyle = positiveGradient;
+    ctx.fillRect(scaleX, scaleY, scaleWidth / 2, scaleHeight);
+    
+    // Negative scale (red)
+    const negativeGradient = ctx.createLinearGradient(scaleX + scaleWidth / 2, scaleY, scaleX + scaleWidth, scaleY);
+    negativeGradient.addColorStop(0, 'rgb(239, 68, 68)');
+    negativeGradient.addColorStop(1, 'rgb(16, 185, 129)');
+    ctx.fillStyle = negativeGradient;
+    ctx.fillRect(scaleX + scaleWidth / 2, scaleY, scaleWidth / 2, scaleHeight);
+    
+    ctx.strokeStyle = '#6b7280';
+    ctx.strokeRect(scaleX, scaleY, scaleWidth, scaleHeight);
+    
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '10px sans-serif';
+    ctx.fillText('Negative', scaleX - 35, scaleY + 6);
+    ctx.fillText('Positive', scaleX + scaleWidth + 5, scaleY + 6);
+  }, [selectedLayer, hoveredWeight, showValues, weightMatrices, layers]);
 
   return (
     <div className="space-y-6">
@@ -234,6 +410,29 @@ export default function InteractiveWeightVisualization() {
               <div className="flex items-center gap-1">
                 <div className="w-4 h-4 bg-red-100 border border-red-300"></div>
                 <span>Negative weight</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Canvas Heatmap Visualization */}
+          <div className="mt-6 bg-white rounded-lg p-4 border-2 border-purple-300">
+            <h5 className="font-bold text-purple-900 mb-3 text-center">Weight Matrix Heatmap</h5>
+            <p className="text-xs text-gray-600 mb-3 text-center">
+              Visual representation of weight values. Green = positive weights, Red = negative weights. Hover over cells above to see details.
+            </p>
+            <canvas
+              ref={canvasRef}
+              className="w-full border border-gray-300 rounded-lg"
+              style={{ height: '400px', width: '100%' }}
+            />
+            <div className="mt-3 flex items-center justify-center gap-4 text-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-red-500"></div>
+                <span>Negative weight</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-green-500"></div>
+                <span>Positive weight</span>
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Brain, Network, Image, MessageSquare, TrendingUp, Layers, Zap, Target, BarChart, Users, CreditCard, Settings, Shield, FileText } from 'lucide-react';
+import { Brain, Network, Image, MessageSquare, TrendingUp, Layers, Zap, Target, BarChart, Users, CreditCard, Settings, Shield, FileText, Cpu, Database, Activity, Gauge, Rocket } from 'lucide-react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function MLUseCasesPanel({ domain, operationType }) {
@@ -51,6 +51,171 @@ v = beta2 * v + (1 - beta2) * gradient**2  # RMSprop
 theta = theta - lr * m / (sqrt(v) + eps)`,
           realWorld: 'All deep learning frameworks - PyTorch, TensorFlow, Keras',
           visual: 'Shows how step size adapts to terrain steepness'
+        },
+        {
+          title: 'Hyperparameter Optimization',
+          icon: <Settings className="w-6 h-6" />,
+          description: 'Derivatives help find optimal hyperparameters like learning rate, regularization strength',
+          stepByStep: [
+            'Define hyperparameter search space',
+            'Use derivatives to estimate sensitivity: ∂L/∂hyperparameter',
+            'Large derivative = hyperparameter has big impact',
+            'Adjust hyperparameters based on derivative magnitude',
+            'Use grid search or Bayesian optimization guided by derivatives'
+          ],
+          example: 'Learning rate sensitivity: ∂L/∂lr shows how much loss changes with learning rate',
+          code: `# Hyperparameter sensitivity using derivatives
+def hyperparameter_sensitivity(model, hyperparam, data):
+    # Compute loss with small change in hyperparameter
+    loss1 = train_and_evaluate(model, hyperparam, data)
+    loss2 = train_and_evaluate(model, hyperparam + epsilon, data)
+    sensitivity = (loss2 - loss1) / epsilon
+    return sensitivity  # Large = sensitive, small = insensitive`,
+          realWorld: 'AutoML systems, neural architecture search, hyperparameter tuning tools',
+          visual: 'Shows loss surface as function of hyperparameters with optimal region'
+        },
+        {
+          title: 'Regularization Strength Tuning',
+          icon: <Shield className="w-6 h-6" />,
+          description: 'Derivatives help balance model complexity and overfitting',
+          stepByStep: [
+            'Loss = Data Loss + λ × Regularization',
+            'Compute derivative: ∂L/∂λ to see regularization impact',
+            'Large derivative = regularization has strong effect',
+            'Adjust λ to balance fit and generalization',
+            'Find λ where derivative indicates good trade-off'
+          ],
+          example: 'L2 regularization: L = MSE + λ||w||², ∂L/∂λ = ||w||² shows regularization contribution',
+          code: `# Regularization tuning
+def compute_regularization_gradient(weights, lambda_reg):
+    data_loss_grad = compute_data_loss_gradient()
+    reg_grad = lambda_reg * 2 * weights  # L2 regularization
+    total_grad = data_loss_grad + reg_grad
+    # Adjust lambda based on gradient balance
+    return total_grad`,
+          realWorld: 'Preventing overfitting, model selection, cross-validation',
+          visual: 'Shows bias-variance trade-off curve with optimal regularization point'
+        },
+        {
+          title: 'Convergence Detection',
+          icon: <Gauge className="w-6 h-6" />,
+          description: 'Derivative magnitude indicates when optimization has converged',
+          stepByStep: [
+            'Monitor derivative magnitude during training',
+            'When |dL/dθ| ≈ 0, we\'re near a minimum',
+            'Stop training when derivative is small enough',
+            'Prevents unnecessary computation',
+            'Indicates optimal parameters found'
+          ],
+          example: 'If |dL/dθ| < 1e-6, we\'ve converged - loss won\'t improve much more',
+          code: `# Convergence detection
+while training:
+    gradient = compute_gradient(theta, X, y)
+    theta = theta - learning_rate * gradient
+    
+    # Check convergence
+    if np.linalg.norm(gradient) < 1e-6:
+        print("Converged!")
+        break`,
+          realWorld: 'Early stopping, efficient training, resource optimization',
+          visual: 'Shows gradient magnitude decreasing to zero as training progresses'
+        }
+      ],
+      'partial-derivatives': [
+        {
+          title: 'Multi-Parameter Neural Networks',
+          icon: <Network className="w-6 h-6" />,
+          description: 'Each weight has its own partial derivative, computed independently',
+          stepByStep: [
+            'Neural network has thousands/millions of weights',
+            'Compute ∂L/∂w₁, ∂L/∂w₂, ..., ∂L/∂wₙ separately',
+            'Each partial derivative shows how one weight affects loss',
+            'Update each weight independently: wᵢ = wᵢ - α × ∂L/∂wᵢ',
+            'All weights updated simultaneously using their partial derivatives'
+          ],
+          example: 'A layer with 784×128 weights needs 100,352 partial derivatives computed',
+          code: `# Computing partial derivatives for each weight
+for i in range(num_weights):
+    # Compute partial derivative for weight i
+    partial_deriv = compute_partial_derivative(loss, weights[i])
+    # Update this weight independently
+    weights[i] = weights[i] - learning_rate * partial_deriv`,
+          realWorld: 'Training all neural networks - each weight optimized independently',
+          visual: 'Shows individual weight updates based on their partial derivatives'
+        },
+        {
+          title: 'Feature Importance Analysis',
+          icon: <BarChart className="w-6 h-6" />,
+          description: 'Partial derivatives reveal which features most impact predictions',
+          stepByStep: [
+            'Compute ∂L/∂feature₁, ∂L/∂feature₂, ..., ∂L/∂featureₙ',
+            'Large partial derivative = feature has big impact',
+            'Small partial derivative = feature has little impact',
+            'Use for feature selection and interpretation',
+            'Remove features with near-zero partial derivatives'
+          ],
+          example: 'If ∂L/∂age = 0.5 and ∂L/∂income = 0.01, age is more important than income',
+          code: `# Feature importance using partial derivatives
+feature_importance = {}
+for feature in features:
+    partial_deriv = compute_partial_derivative(loss, feature)
+    feature_importance[feature] = abs(partial_deriv)
+
+# Sort by importance
+important_features = sorted(feature_importance.items(), 
+                           key=lambda x: x[1], reverse=True)`,
+          realWorld: 'Feature selection, model interpretability, explainable AI',
+          visual: 'Shows bar chart of feature importances based on partial derivative magnitudes'
+        },
+        {
+          title: 'Gradient Vector Construction',
+          icon: <TrendingUp className="w-6 h-6" />,
+          description: 'Gradients are vectors of partial derivatives - one per parameter',
+          stepByStep: [
+            'Compute partial derivative for each parameter',
+            'Collect all partial derivatives into a vector',
+            'Gradient = [∂L/∂w₁, ∂L/∂w₂, ..., ∂L/∂wₙ]',
+            'This gradient vector guides optimization',
+            'Each component is a partial derivative'
+          ],
+          example: 'For 3 parameters: ∇L = [∂L/∂w₁, ∂L/∂w₂, ∂L/∂w₃]',
+          code: `# Constructing gradient from partial derivatives
+def compute_gradient(weights, X, y):
+    gradient = []
+    for i in range(len(weights)):
+        # Compute partial derivative for weight i
+        partial = compute_partial_derivative(loss, weights[i], X, y)
+        gradient.append(partial)
+    return np.array(gradient)  # Gradient vector`,
+          realWorld: 'All gradient-based optimization - SGD, Adam, RMSprop',
+          visual: 'Shows how individual partial derivatives combine into gradient vector'
+        },
+        {
+          title: 'Multi-Output Models',
+          icon: <Target className="w-6 h-6" />,
+          description: 'Partial derivatives handle models with multiple outputs',
+          stepByStep: [
+            'Model predicts multiple outputs: [y₁, y₂, ..., yₖ]',
+            'Compute ∂L/∂output₁, ∂L/∂output₂, ..., ∂L/∂outputₖ',
+            'Each output has its own partial derivative',
+            'Update model to optimize all outputs simultaneously',
+            'Balance improvements across all outputs'
+          ],
+          example: 'Multi-task learning: predict age, income, and purchase probability simultaneously',
+          code: `# Multi-output model with partial derivatives
+def multi_output_loss(predictions, targets):
+    loss1 = mse_loss(predictions[0], targets[0])  # Age prediction
+    loss2 = mse_loss(predictions[1], targets[1])  # Income prediction
+    loss3 = bce_loss(predictions[2], targets[2])  # Purchase prediction
+    
+    # Partial derivatives for each output
+    dL_doutput1 = compute_partial_derivative(loss1, predictions[0])
+    dL_doutput2 = compute_partial_derivative(loss2, predictions[1])
+    dL_doutput3 = compute_partial_derivative(loss3, predictions[2])
+    
+    return [dL_doutput1, dL_doutput2, dL_doutput3]`,
+          realWorld: 'Multi-task learning, ensemble models, structured prediction',
+          visual: 'Shows multiple output heads with their respective partial derivatives'
         }
       ],
       'gradients': [
@@ -97,6 +262,227 @@ for epoch in range(num_epochs):
         theta = theta - learning_rate * gradient`,
           realWorld: 'Large datasets, online learning, deep learning training',
           visual: 'Shows noisy but faster convergence path'
+        },
+        {
+          title: 'Mini-Batch Gradient Descent',
+          icon: <Database className="w-6 h-6" />,
+          description: 'Compute gradient using small batches for balance between speed and accuracy',
+          stepByStep: [
+            'Divide dataset into mini-batches (e.g., 32 samples)',
+            'Compute gradient using one mini-batch: ∇L_batch',
+            'Update weights: w = w - α∇L_batch',
+            'Process all mini-batches (one epoch)',
+            'Balances speed (SGD) and accuracy (full gradient)'
+          ],
+          example: 'Process 32 samples at a time instead of 1 (SGD) or 10,000 (full gradient)',
+          code: `# Mini-batch gradient descent
+batch_size = 32
+for epoch in range(num_epochs):
+    for batch in create_batches(data, batch_size):
+        gradient = compute_gradient(theta, batch.X, batch.y)
+        theta = theta - learning_rate * gradient`,
+          realWorld: 'Standard training method for all deep learning - CNNs, RNNs, Transformers',
+          visual: 'Shows smoother convergence than SGD, faster than full gradient descent'
+        },
+        {
+          title: 'Gradient Clipping',
+          icon: <Shield className="w-6 h-6" />,
+          description: 'Prevent exploding gradients by clipping gradient magnitude',
+          stepByStep: [
+            'Compute gradient: ∇L',
+            'Check gradient magnitude: ||∇L||',
+            'If ||∇L|| > threshold, clip: ∇L = threshold × ∇L / ||∇L||',
+            'Prevents large weight updates',
+            'Stabilizes training, especially in RNNs'
+          ],
+          example: 'If gradient magnitude is 100 and threshold is 10, clip to magnitude 10',
+          code: `# Gradient clipping
+gradient = compute_gradient(theta, X, y)
+gradient_norm = np.linalg.norm(gradient)
+max_norm = 10.0
+
+if gradient_norm > max_norm:
+    gradient = gradient * (max_norm / gradient_norm)  # Clip
+
+theta = theta - learning_rate * gradient`,
+          realWorld: 'RNN/LSTM training, transformer training, preventing training instability',
+          visual: 'Shows gradient magnitude before/after clipping, preventing explosions'
+        },
+        {
+          title: 'Second-Order Optimization',
+          icon: <Activity className="w-6 h-6" />,
+          description: 'Use second derivatives (Hessian) for faster convergence',
+          stepByStep: [
+            'Compute gradient: ∇L (first derivatives)',
+            'Compute Hessian: H (second derivatives)',
+            'Hessian captures curvature of loss surface',
+            'Newton\'s method: θ = θ - H⁻¹∇L',
+            'Converges faster but more expensive to compute'
+          ],
+          example: 'Hessian tells us not just direction (gradient) but also curvature',
+          code: `# Newton's method (second-order)
+gradient = compute_gradient(theta, X, y)
+hessian = compute_hessian(theta, X, y)  # Second derivatives
+# Update: θ = θ - H⁻¹∇L
+theta = theta - np.linalg.inv(hessian) @ gradient`,
+          realWorld: 'Quasi-Newton methods (L-BFGS), natural gradient descent, advanced optimizers',
+          visual: 'Shows faster convergence using curvature information'
+        },
+        {
+          title: 'Gradient-Based Feature Engineering',
+          icon: <Settings className="w-6 h-6" />,
+          description: 'Use gradients to create new features that improve model performance',
+          stepByStep: [
+            'Train initial model, compute gradients',
+            'Identify features with large gradient magnitudes',
+            'Create interactions/transformations of important features',
+            'Retrain with new features',
+            'Iteratively improve feature set'
+          ],
+          example: 'If ∂L/∂age and ∂L/∂income are large, create feature age×income',
+          code: `# Feature engineering using gradients
+initial_model = train_model(X, y)
+gradients = compute_feature_gradients(initial_model, X, y)
+
+# Create new features based on gradient importance
+important_features = [f for f, g in zip(features, gradients) if abs(g) > threshold]
+X_new = create_interactions(X, important_features)`,
+          realWorld: 'Automated feature engineering, feature selection, model improvement',
+          visual: 'Shows feature importance and new features created from gradients'
+        }
+      ],
+      'chain-rule': [
+        {
+          title: 'Deep Neural Network Training',
+          icon: <Network className="w-6 h-6" />,
+          description: 'Chain rule enables gradient computation through multiple layers',
+          stepByStep: [
+            'Network: input → layer1 → layer2 → ... → output',
+            'Forward pass: compute activations layer by layer',
+            'Backward pass: apply chain rule layer by layer',
+            '∂L/∂w_layer1 = (∂L/∂output) × (∂output/∂layer2) × ... × (∂layer1/∂w_layer1)',
+            'Multiply derivatives through the chain'
+          ],
+          example: '3-layer network: ∂L/∂w₁ = (∂L/∂y) × (∂y/∂h₂) × (∂h₂/∂h₁) × (∂h₁/∂w₁)',
+          code: `# Chain rule in deep network
+def backward_pass(loss, activations):
+    # Start from output
+    grad_output = compute_loss_gradient(loss)
+    
+    # Apply chain rule backward
+    grad_layer2 = grad_output * activation_derivative(layer2)
+    grad_layer1 = grad_layer2 * activation_derivative(layer1)
+    grad_weights = grad_layer1 * input
+    
+    return grad_weights  # Chain rule multiplies all derivatives`,
+          realWorld: 'Training all deep networks - ResNet, VGG, DenseNet, any multi-layer network',
+          visual: 'Shows gradient propagation backward through network layers using chain rule'
+        },
+        {
+          title: 'Recurrent Neural Networks (RNNs)',
+          icon: <MessageSquare className="w-6 h-6" />,
+          description: 'Chain rule handles time-dependent sequences in RNNs',
+          stepByStep: [
+            'RNN processes sequence: x₁ → x₂ → ... → xₜ',
+            'Each time step depends on previous: hₜ = f(hₜ₋₁, xₜ)',
+            'Chain rule: ∂L/∂h₁ = (∂L/∂hₜ) × (∂hₜ/∂hₜ₋₁) × ... × (∂h₂/∂h₁)',
+            'Backpropagation Through Time (BPTT)',
+            'Gradients multiply across time steps'
+          ],
+          example: 'For sequence of length 10, chain rule multiplies 10 derivatives',
+          code: `# Backpropagation Through Time (BPTT)
+def bptt(rnn, sequence, loss):
+    # Forward pass: store all hidden states
+    hidden_states = forward_pass(rnn, sequence)
+    
+    # Backward pass: chain rule across time
+    grad_hidden = compute_loss_gradient(loss)
+    for t in reversed(range(len(sequence))):
+        grad_hidden = grad_hidden * rnn.activation_derivative(hidden_states[t])
+        # Chain rule: multiply by derivative at each time step
+    
+    return grad_hidden`,
+          realWorld: 'Language modeling, speech recognition, time series prediction, LSTM/GRU training',
+          visual: 'Shows gradient flow backward through time steps in RNN'
+        },
+        {
+          title: 'Residual Connections (ResNet)',
+          icon: <Layers className="w-6 h-6" />,
+          description: 'Chain rule handles skip connections in residual networks',
+          stepByStep: [
+            'Residual block: output = F(x) + x (skip connection)',
+            'Gradient has two paths: through F(x) and through x',
+            'Chain rule: ∂L/∂x = (∂L/∂output) × (∂output/∂F) × (∂F/∂x) + (∂L/∂output) × 1',
+            'Skip connection provides direct gradient path',
+            'Prevents vanishing gradients in deep networks'
+          ],
+          example: 'Gradient flows both through transformation F(x) and skip connection x',
+          code: `# ResNet gradient computation
+def resnet_backward(grad_output, residual, transformed):
+    # Gradient through transformation path
+    grad_transform = grad_output * transformation_derivative(transformed)
+    
+    # Gradient through skip connection (identity, derivative = 1)
+    grad_skip = grad_output * 1
+    
+    # Chain rule: sum both paths
+    grad_input = grad_transform + grad_skip
+    return grad_input`,
+          realWorld: 'Training very deep CNNs (ResNet-152), preventing vanishing gradients',
+          visual: 'Shows gradient flow through both transformation and skip connection paths'
+        },
+        {
+          title: 'Attention Mechanisms',
+          icon: <Brain className="w-6 h-6" />,
+          description: 'Chain rule computes gradients through attention weights',
+          stepByStep: [
+            'Attention: output = Σ(attention_weights × values)',
+            'Attention weights depend on query, key, value',
+            'Chain rule: ∂L/∂query = (∂L/∂output) × (∂output/∂attention) × (∂attention/∂query)',
+            'Gradients flow through attention computation',
+            'Enables training of transformer models'
+          ],
+          example: 'Transformer self-attention: gradients flow through Q, K, V matrices',
+          code: `# Attention gradient computation
+def attention_backward(grad_output, attention_weights, values, queries, keys):
+    # Gradient through attention weights
+    grad_attention = grad_output @ values.T
+    
+    # Gradient through queries (chain rule)
+    grad_queries = grad_attention * attention_derivative_wrt_query(queries, keys)
+    
+    # Gradient through keys
+    grad_keys = grad_attention * attention_derivative_wrt_key(queries, keys)
+    
+    return grad_queries, grad_keys  # Chain rule applied`,
+          realWorld: 'Training Transformers, BERT, GPT models, vision transformers',
+          visual: 'Shows gradient flow through attention mechanism using chain rule'
+        },
+        {
+          title: 'Convolutional Neural Networks',
+          icon: <Image className="w-6 h-6" />,
+          description: 'Chain rule handles convolution operations and pooling layers',
+          stepByStep: [
+            'CNN: Conv → ReLU → Pool → Conv → ... → Output',
+            'Each layer is a function: output = layer(input)',
+            'Chain rule: ∂L/∂conv1 = (∂L/∂output) × ... × (∂pool/∂conv1)',
+            'Gradients propagate through convolution kernels',
+            'Enables training of image recognition models'
+          ],
+          example: 'VGG-16: chain rule multiplies derivatives through 16 convolutional layers',
+          code: `# CNN backpropagation with chain rule
+def cnn_backward(grad_output, conv_layers, activations):
+    grad = grad_output
+    
+    # Backward through each layer (chain rule)
+    for layer in reversed(conv_layers):
+        # Chain rule: multiply by layer derivative
+        grad = grad * layer.activation_derivative(activations[layer])
+        grad = layer.backward(grad)  # Convolution backward
+    
+    return grad  # Chain rule applied through all layers`,
+          realWorld: 'Training CNNs for image classification, object detection, semantic segmentation',
+          visual: 'Shows gradient flow backward through convolutional layers'
         }
       ],
       'backpropagation': [
@@ -140,6 +526,120 @@ y.backward()  # Computes dy/dx automatically
 print(x.grad)  # Gradient: 2*x + 3 = 7`,
           realWorld: 'All modern deep learning - PyTorch, TensorFlow, JAX',
           visual: 'Shows computation graph with forward/backward passes'
+        },
+        {
+          title: 'Transfer Learning & Fine-Tuning',
+          icon: <Rocket className="w-6 h-6" />,
+          description: 'Backpropagation fine-tunes pre-trained models for new tasks',
+          stepByStep: [
+            'Start with pre-trained model (e.g., ImageNet weights)',
+            'Freeze early layers, unfreeze last layers',
+            'Backpropagation only updates unfrozen layers',
+            'Gradients flow backward but only update selected weights',
+            'Much faster than training from scratch'
+          ],
+          example: 'Fine-tune ResNet-50: freeze first 40 layers, train last 10 layers',
+          code: `# Transfer learning with backpropagation
+pretrained_model = models.resnet50(pretrained=True)
+
+# Freeze early layers
+for param in pretrained_model.layer1.parameters():
+    param.requires_grad = False
+
+# Unfreeze last layers
+for param in pretrained_model.fc.parameters():
+    param.requires_grad = True
+
+# Backpropagation only updates unfrozen layers
+loss.backward()  # Gradients computed but only unfrozen weights update`,
+          realWorld: 'Medical imaging, custom classifiers, domain adaptation, few-shot learning',
+          visual: 'Shows gradient flow with some layers frozen (no updates)'
+        },
+        {
+          title: 'Gradient Checkpointing',
+          icon: <Cpu className="w-6 h-6" />,
+          description: 'Trade computation for memory by recomputing activations during backprop',
+          stepByStep: [
+            'Forward pass: store activations at checkpoints only',
+            'Backward pass: recompute activations between checkpoints',
+            'Reduces memory usage significantly',
+            'Enables training larger models on same hardware',
+            'Backpropagation still works correctly'
+          ],
+          example: 'Store activations every 5 layers instead of every layer - 5× memory savings',
+          code: `# Gradient checkpointing
+def checkpointed_forward(model, x):
+    # Store activations at checkpoints
+    checkpoints = []
+    for i, layer in enumerate(model.layers):
+        x = layer(x)
+        if i % checkpoint_interval == 0:
+            checkpoints.append(x)
+    return x, checkpoints
+
+# Backward: recompute between checkpoints
+def checkpointed_backward(model, grad_output, checkpoints):
+    # Recompute activations during backward pass
+    # Backpropagation still works via chain rule`,
+          realWorld: 'Training large models on limited GPU memory, GPT models, large CNNs',
+          visual: 'Shows memory usage comparison with/without checkpointing'
+        },
+        {
+          title: 'Distributed Training',
+          icon: <Network className="w-6 h-6" />,
+          description: 'Backpropagation works across multiple GPUs/machines',
+          stepByStep: [
+            'Split batch across multiple devices',
+            'Each device computes gradients for its batch',
+            'Backpropagation runs on each device independently',
+            'Average gradients across all devices',
+            'Update weights using averaged gradients'
+          ],
+          example: '4 GPUs: each computes gradients for 32 samples, average 4 gradients',
+          code: `# Distributed backpropagation
+def distributed_backward(model, batches):
+    gradients = []
+    for batch in batches:  # Each on different GPU
+        loss = model(batch)
+        loss.backward()  # Backpropagation on this GPU
+        gradients.append(model.get_gradients())
+    
+    # Average gradients across all GPUs
+    avg_gradient = average(gradients)
+    model.update_weights(avg_gradient)`,
+          realWorld: 'Training large models (GPT-3, BERT), multi-GPU training, cloud training',
+          visual: 'Shows gradient computation across multiple devices, then averaging'
+        },
+        {
+          title: 'Meta-Learning & Few-Shot Learning',
+          icon: <Brain className="w-6 h-6" />,
+          description: 'Backpropagation through optimization process for meta-learning',
+          stepByStep: [
+            'Train model on task A using backpropagation',
+            'Evaluate on task B',
+            'Backpropagate through the training process itself',
+            'Update meta-parameters to improve learning',
+            'Model learns to learn faster'
+          ],
+          example: 'MAML: backpropagate through gradient descent steps to learn good initialization',
+          code: `# Meta-learning with backpropagation
+def meta_learn(model, tasks):
+    meta_grad = 0
+    for task in tasks:
+        # Inner loop: train on task
+        for step in range(inner_steps):
+            loss = model(task)
+            grad = compute_gradient(loss)
+            model = model - lr * grad
+        
+        # Outer loop: backpropagate through training
+        meta_loss = evaluate(model, task)
+        meta_grad += compute_gradient(meta_loss)
+    
+    # Update meta-parameters
+    meta_params = meta_params - meta_lr * meta_grad`,
+          realWorld: 'Few-shot learning, rapid adaptation, learning to learn, MAML, Reptile',
+          visual: 'Shows nested optimization with backpropagation through training'
         }
       ]
     },
@@ -187,6 +687,315 @@ outliers = np.where(z_scores > 3)[0]
 X_clean = np.delete(X, outliers, axis=0)`,
           realWorld: 'Fraud detection, data cleaning, quality assurance',
           visual: 'Shows normal distribution with outliers highlighted'
+        },
+        {
+          title: 'Feature Scaling & Normalization',
+          icon: <Settings className="w-6 h-6" />,
+          description: 'Use mean and std to scale features for optimal model performance',
+          stepByStep: [
+            'Calculate mean and standard deviation for each feature',
+            'Apply Min-Max scaling: (x - min) / (max - min)',
+            'Or Z-score normalization: (x - μ) / σ',
+            'All features now on same scale',
+            'Prevents features with large ranges from dominating'
+          ],
+          example: 'Height (cm) and Weight (kg) scaled to [0,1] or mean=0, std=1',
+          code: `# Feature scaling
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+
+# Min-Max scaling (0 to 1)
+scaler = MinMaxScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Z-score normalization (mean=0, std=1)
+scaler = StandardScaler()
+X_normalized = scaler.fit_transform(X)`,
+          realWorld: 'Neural networks, SVM, k-means clustering - all benefit from scaled features',
+          visual: 'Shows feature distributions before/after scaling'
+        },
+        {
+          title: 'Data Quality Assessment',
+          icon: <Shield className="w-6 h-6" />,
+          description: 'Use descriptive statistics to assess data quality before modeling',
+          stepByStep: [
+            'Calculate mean, median, std for each feature',
+            'Check for missing values (NaN)',
+            'Identify features with zero variance (std = 0)',
+            'Detect skewed distributions (mean ≠ median)',
+            'Flag potential data quality issues'
+          ],
+          example: 'If std = 0, feature has no variation - remove it. If mean >> median, data is skewed',
+          code: `# Data quality assessment
+def assess_data_quality(X):
+    stats = {}
+    for i, feature in enumerate(X.columns):
+        mean = X[feature].mean()
+        median = X[feature].median()
+        std = X[feature].std()
+        
+        stats[feature] = {
+            'mean': mean,
+            'median': median,
+            'std': std,
+            'zero_variance': std == 0,
+            'skewed': abs(mean - median) > 2 * std
+        }
+    return stats`,
+          realWorld: 'Data validation, EDA (Exploratory Data Analysis), preprocessing pipelines',
+          visual: 'Shows statistics dashboard with quality flags'
+        },
+        {
+          title: 'Baseline Model Performance',
+          icon: <Gauge className="w-6 h-6" />,
+          description: 'Use mean/median as simple baseline predictions',
+          stepByStep: [
+            'Calculate mean or median of target variable',
+            'Predict mean/median for all samples',
+            'Compare ML model performance against baseline',
+            'Model must beat baseline to be useful',
+            'Baseline provides performance floor'
+          ],
+          example: 'If mean house price = $300K, baseline predicts $300K for all houses. Model must do better!',
+          code: `# Baseline model
+mean_baseline = np.mean(y_train)
+baseline_predictions = np.full(len(y_test), mean_baseline)
+baseline_mse = np.mean((baseline_predictions - y_test)**2)
+
+# Compare with ML model
+model_mse = np.mean((model_predictions - y_test)**2)
+improvement = (baseline_mse - model_mse) / baseline_mse`,
+          realWorld: 'Model evaluation, performance benchmarking, sanity checks',
+          visual: 'Shows baseline predictions vs model predictions'
+        }
+      ],
+      'covariance': [
+        {
+          title: 'Principal Component Analysis (PCA)',
+          icon: <TrendingUp className="w-6 h-6" />,
+          description: 'Use covariance matrix to find principal components for dimensionality reduction',
+          stepByStep: [
+            'Compute covariance matrix Σ from data',
+            'Find eigenvalues and eigenvectors of Σ',
+            'Eigenvectors are principal components (directions of max variance)',
+            'Project data onto top k principal components',
+            'Reduce dimensions while preserving most variance'
+          ],
+          example: '1000 features → 50 principal components, preserving 95% variance',
+          code: `# PCA using covariance matrix
+from sklearn.decomposition import PCA
+
+# Compute covariance matrix
+cov_matrix = np.cov(X.T)
+
+# PCA (uses covariance internally)
+pca = PCA(n_components=50)
+X_reduced = pca.fit_transform(X)
+
+# Explained variance
+variance_ratio = pca.explained_variance_ratio_`,
+          realWorld: 'Image compression, feature reduction, visualization, noise reduction',
+          visual: 'Shows data projected onto principal components'
+        },
+        {
+          title: 'Feature Selection & Multicollinearity',
+          icon: <Target className="w-6 h-6" />,
+          description: 'Remove highly correlated features to prevent multicollinearity',
+          stepByStep: [
+            'Compute correlation matrix for all feature pairs',
+            'Identify pairs with |correlation| > threshold (e.g., 0.95)',
+            'Remove one feature from each highly correlated pair',
+            'Prevents numerical instability in linear models',
+            'Reduces model complexity'
+          ],
+          example: 'If "height_cm" and "height_inches" have correlation = 1.0, remove one',
+          code: `# Remove highly correlated features
+import numpy as np
+import pandas as pd
+
+# Compute correlation matrix
+corr_matrix = X.corr().abs()
+
+# Find highly correlated pairs
+high_corr_pairs = []
+for i in range(len(corr_matrix.columns)):
+    for j in range(i+1, len(corr_matrix.columns)):
+        if corr_matrix.iloc[i, j] > 0.95:
+            high_corr_pairs.append((corr_matrix.columns[i], corr_matrix.columns[j]))
+
+# Remove one feature from each pair
+features_to_remove = [pair[1] for pair in high_corr_pairs]
+X_clean = X.drop(columns=features_to_remove)`,
+          realWorld: 'Linear regression, logistic regression, preventing overfitting',
+          visual: 'Shows correlation heatmap with highly correlated pairs highlighted'
+        },
+        {
+          title: 'Multivariate Gaussian Distribution',
+          icon: <BarChart className="w-6 h-6" />,
+          description: 'Covariance matrix defines multivariate normal distribution',
+          stepByStep: [
+            'Multivariate Gaussian: N(μ, Σ) where μ is mean vector, Σ is covariance matrix',
+            'Covariance matrix captures relationships between variables',
+            'Diagonal elements = variances, off-diagonal = covariances',
+            'Used in Gaussian Mixture Models, anomaly detection',
+            'Enables modeling of correlated features'
+          ],
+          example: '2D Gaussian: covariance matrix captures how x and y vary together',
+          code: `# Multivariate Gaussian
+from scipy.stats import multivariate_normal
+
+# Mean vector
+mu = np.array([0, 0])
+
+# Covariance matrix
+cov = np.array([[1, 0.5], [0.5, 1]])
+
+# Create distribution
+dist = multivariate_normal(mu, cov)
+
+# Sample from distribution
+samples = dist.rvs(size=1000)`,
+          realWorld: 'Gaussian Mixture Models, anomaly detection, density estimation',
+          visual: 'Shows 2D/3D Gaussian distribution with covariance ellipses'
+        },
+        {
+          title: 'Feature Engineering & Interactions',
+          icon: <Settings className="w-6 h-6" />,
+          description: 'Use correlation to identify features for interaction terms',
+          stepByStep: [
+            'Compute correlation between features',
+            'Identify moderately correlated features (0.3-0.7)',
+            'Create interaction features: feature1 × feature2',
+            'Interaction captures combined effect',
+            'Improves model performance'
+          ],
+          example: 'If age and income are correlated, create "age × income" feature',
+          code: `# Feature interactions based on correlation
+corr_matrix = X.corr()
+
+# Find moderately correlated pairs
+for i in range(len(corr_matrix.columns)):
+    for j in range(i+1, len(corr_matrix.columns)):
+        corr = abs(corr_matrix.iloc[i, j])
+        if 0.3 < corr < 0.7:
+            # Create interaction feature
+            feature1 = corr_matrix.columns[i]
+            feature2 = corr_matrix.columns[j]
+            X[f'{feature1}_x_{feature2}'] = X[feature1] * X[feature2]`,
+          realWorld: 'Linear models, tree-based models, improving predictive power',
+          visual: 'Shows correlation matrix and new interaction features'
+        }
+      ],
+      'conditional-probability': [
+        {
+          title: 'Decision Tree Splitting',
+          icon: <Network className="w-6 h-6" />,
+          description: 'Use conditional probabilities to determine optimal splits',
+          stepByStep: [
+            'At each node, calculate P(class|feature) for each feature',
+            'Choose feature that best separates classes',
+            'Split maximizes information gain (reduces entropy)',
+            'Recursively build tree using conditional probabilities',
+            'Leaf nodes predict class with highest probability'
+          ],
+          example: 'If P(spam|contains "free") = 0.9, split on "contains free" feature',
+          code: `# Decision tree using conditional probabilities
+from sklearn.tree import DecisionTreeClassifier
+
+# Tree uses conditional probabilities internally
+tree = DecisionTreeClassifier()
+tree.fit(X_train, y_train)
+
+# At each split, tree calculates:
+# P(class|feature_value) for each feature and value
+# Chooses split that maximizes information gain`,
+          realWorld: 'Classification trees, random forests, gradient boosting (XGBoost, LightGBM)',
+          visual: 'Shows tree structure with conditional probabilities at each node'
+        },
+        {
+          title: 'Bayesian Networks',
+          icon: <Brain className="w-6 h-6" />,
+          description: 'Model conditional dependencies between variables',
+          stepByStep: [
+            'Define network structure: nodes = variables, edges = dependencies',
+            'Each node has conditional probability: P(node|parents)',
+            'Chain rule: P(x₁, x₂, ..., xₙ) = Π P(xᵢ|parents(xᵢ))',
+            'Inference: compute P(query|evidence)',
+            'Learning: estimate conditional probabilities from data'
+          ],
+          example: 'Medical diagnosis: P(disease|symptoms, age, test_results)',
+          code: `# Bayesian Network
+from pgmpy.models import BayesianModel
+from pgmpy.estimators import MaximumLikelihoodEstimator
+
+# Define structure
+model = BayesianModel([('Age', 'Disease'), ('Symptoms', 'Disease'), ('Disease', 'Test')])
+
+# Learn conditional probabilities
+model.fit(data, estimator=MaximumLikelihoodEstimator)
+
+# Inference
+from pgmpy.inference import VariableElimination
+infer = VariableElimination(model)
+prob = infer.query(['Disease'], evidence={'Symptoms': 'fever', 'Age': 50})`,
+          realWorld: 'Medical diagnosis, risk assessment, probabilistic reasoning systems',
+          visual: 'Shows network graph with conditional probability tables'
+        },
+        {
+          title: 'Hidden Markov Models (HMMs)',
+          icon: <Activity className="w-6 h-6" />,
+          description: 'Model sequences using conditional probabilities',
+          stepByStep: [
+            'HMM has hidden states and observations',
+            'Transition probability: P(state_t|state_{t-1})',
+            'Emission probability: P(observation_t|state_t)',
+            'Use chain rule to compute P(sequence)',
+            'Viterbi algorithm finds most likely state sequence'
+          ],
+          example: 'Speech recognition: P(phoneme|audio_features) and P(phoneme_t|phoneme_{t-1})',
+          code: `# Hidden Markov Model
+from hmmlearn import hmm
+
+# Create HMM
+model = hmm.GaussianHMM(n_components=3)
+
+# Train (learns transition and emission probabilities)
+model.fit(observations)
+
+# Decode (find most likely state sequence)
+states = model.decode(observations)[1]
+
+# Transition: P(state_t|state_{t-1})
+# Emission: P(obs_t|state_t)`,
+          realWorld: 'Speech recognition, natural language processing, bioinformatics, time series',
+          visual: 'Shows state transitions and emission probabilities'
+        },
+        {
+          title: 'Conditional Random Fields (CRFs)',
+          icon: <Layers className="w-6 h-6" />,
+          description: 'Model conditional probability of label sequence given observations',
+          stepByStep: [
+            'CRF models P(label_sequence|observation_sequence)',
+            'Uses conditional probabilities, not joint probabilities',
+            'Considers context: P(label_t|observations, label_{t-1})',
+            'More flexible than HMMs (no independence assumptions)',
+            'Used for sequence labeling tasks'
+          ],
+          example: 'Named entity recognition: P(entity_tags|words)',
+          code: `# Conditional Random Field
+from sklearn_crfsuite import CRF
+
+# Create CRF model
+crf = CRF(algorithm='lbfgs', c1=0.1, c2=0.1)
+
+# Train (learns conditional probabilities)
+crf.fit(X_train, y_train)
+
+# Predict sequences
+predictions = crf.predict(X_test)
+
+# Models P(y|x) directly, not P(x,y)`,
+          realWorld: 'Named entity recognition, part-of-speech tagging, information extraction',
+          visual: 'Shows label sequence with conditional dependencies'
         }
       ],
       'bayes': [
@@ -235,6 +1044,100 @@ evidence = prior * likelihood + (1 - prior) * (1 - likelihood)
 posterior = (likelihood * prior) / evidence`,
           realWorld: 'A/B testing, medical diagnosis, recommendation systems',
           visual: 'Shows prior → likelihood → posterior update'
+        },
+        {
+          title: 'Bayesian Optimization',
+          icon: <TrendingUp className="w-6 h-6" />,
+          description: 'Use Bayes theorem to optimize hyperparameters efficiently',
+          stepByStep: [
+            'Start with prior over hyperparameter space',
+            'Evaluate objective function at sample points',
+            'Update posterior using Bayes theorem',
+            'Use acquisition function (e.g., Expected Improvement)',
+            'Select next point to evaluate, repeat'
+          ],
+          example: 'Optimize learning rate: start with prior, evaluate model performance, update beliefs',
+          code: `# Bayesian Optimization
+from skopt import gp_minimize
+from skopt.space import Real
+
+# Define search space
+space = [Real(0.001, 0.1, name='learning_rate')]
+
+# Objective function
+def objective(params):
+    lr = params[0]
+    model = train_model(learning_rate=lr)
+    return -model.score(X_test, y_test)  # Minimize negative score
+
+# Optimize using Bayesian approach
+result = gp_minimize(objective, space, n_calls=50)`,
+          realWorld: 'Hyperparameter tuning, neural architecture search, AutoML',
+          visual: 'Shows hyperparameter space with posterior distribution and acquisition function'
+        },
+        {
+          title: 'Bayesian Neural Networks',
+          icon: <Network className="w-6 h-6" />,
+          description: 'Use Bayesian inference to quantify uncertainty in neural networks',
+          stepByStep: [
+            'Place prior distributions on network weights',
+            'Use Bayes theorem to compute posterior P(weights|data)',
+            'Posterior captures uncertainty in weights',
+            'Predictions become distributions, not point estimates',
+            'Provides uncertainty quantification'
+          ],
+          example: 'Instead of fixed weights, have weight distributions - captures model uncertainty',
+          code: `# Bayesian Neural Network
+import tensorflow_probability as tfp
+
+# Define prior on weights
+def prior(kernel_size, bias_size, dtype=None):
+    return tfp.distributions.Independent(
+        tfp.distributions.Normal(loc=tf.zeros(kernel_size + bias_size), scale=1.0),
+        reinterpreted_batch_ndims=1)
+
+# Define likelihood
+def likelihood(dist):
+    return tfp.distributions.Normal(loc=dist, scale=1.0)
+
+# Build Bayesian layer
+layer = tfp.layers.DenseVariational(
+    units=1,
+    make_prior_fn=prior,
+    make_posterior_fn=posterior,
+    kl_weight=1/X_train.shape[0],
+    activation='sigmoid')`,
+          realWorld: 'Uncertainty quantification, active learning, risk-sensitive applications',
+          visual: 'Shows weight distributions and prediction uncertainty'
+        },
+        {
+          title: 'Recommendation Systems',
+          icon: <Users className="w-6 h-6" />,
+          description: 'Use Bayesian inference to update user preferences',
+          stepByStep: [
+            'Start with prior on user preferences',
+            'Observe user interactions (likes, clicks, purchases)',
+            'Update posterior: P(preferences|interactions)',
+            'Recommend items with high posterior probability',
+            'Continually update as more data arrives'
+          ],
+          example: 'Netflix: Start with general preferences, update based on viewing history',
+          code: `# Bayesian Recommendation System
+# Prior: P(user_likes_genre)
+prior = {'action': 0.3, 'comedy': 0.3, 'drama': 0.4}
+
+# Likelihood: P(interaction|user_likes_genre)
+likelihood = compute_likelihood(user_interactions, genres)
+
+# Posterior: P(user_likes_genre|interactions)
+posterior = {}
+for genre in prior:
+    posterior[genre] = (likelihood[genre] * prior[genre]) / evidence
+
+# Recommend based on posterior
+recommendations = sorted(posterior.items(), key=lambda x: x[1], reverse=True)`,
+          realWorld: 'Netflix, Amazon, Spotify, e-commerce personalization',
+          visual: 'Shows preference updates from prior to posterior'
         }
       ],
       'distributions': [
@@ -286,6 +1189,135 @@ ce_loss = -np.mean(y_true * np.log(y_pred) +
                    (1 - y_true) * np.log(1 - y_pred))`,
           realWorld: 'All ML models - choosing right loss for problem type',
           visual: 'Shows error distribution and corresponding loss function'
+        },
+        {
+          title: 'Variational Autoencoders (VAEs)',
+          icon: <Image className="w-6 h-6" />,
+          description: 'Learn latent distributions to generate diverse outputs',
+          stepByStep: [
+            'Encode input to latent distribution parameters (μ, σ)',
+            'Sample from latent distribution: z ~ N(μ, σ)',
+            'Decode z to reconstruct input',
+            'Learn to match data distribution',
+            'Generate new samples by sampling from learned distribution'
+          ],
+          example: 'VAE learns distribution of faces, generates new realistic faces',
+          code: `# Variational Autoencoder
+import torch
+import torch.nn as nn
+
+class VAE(nn.Module):
+    def encode(self, x):
+        # Output distribution parameters
+        mu, logvar = self.encoder(x).chunk(2, dim=1)
+        return mu, logvar
+    
+    def reparameterize(self, mu, logvar):
+        # Sample from distribution
+        std = torch.exp(0.5 * logvar)
+        eps = torch.randn_like(std)
+        return mu + eps * std
+    
+    def decode(self, z):
+        return self.decoder(z)
+    
+    def forward(self, x):
+        mu, logvar = self.encode(x)
+        z = self.reparameterize(mu, logvar)
+        return self.decode(z), mu, logvar`,
+          realWorld: 'Image generation, data augmentation, representation learning',
+          visual: 'Shows latent distribution and generated samples'
+        },
+        {
+          title: 'Gaussian Mixture Models (GMMs)',
+          icon: <BarChart className="w-6 h-6" />,
+          description: 'Model data as mixture of multiple Gaussian distributions',
+          stepByStep: [
+            'Assume data comes from k Gaussian distributions',
+            'Each component has its own mean and covariance',
+            'Learn component parameters using EM algorithm',
+            'Assign data points to components probabilistically',
+            'Use for clustering and density estimation'
+          ],
+          example: 'Customer segmentation: model customer data as mixture of different customer types',
+          code: `# Gaussian Mixture Model
+from sklearn.mixture import GaussianMixture
+
+# Create GMM with k components
+gmm = GaussianMixture(n_components=3)
+
+# Fit model (learns component distributions)
+gmm.fit(X)
+
+# Predict component assignments
+labels = gmm.predict(X)
+
+# Get component parameters
+means = gmm.means_
+covariances = gmm.covariances_`,
+          realWorld: 'Clustering, anomaly detection, density estimation, customer segmentation',
+          visual: 'Shows multiple Gaussian distributions and data assignments'
+        },
+        {
+          title: 'Monte Carlo Methods',
+          icon: <Activity className="w-6 h-6" />,
+          description: 'Sample from distributions to estimate expectations',
+          stepByStep: [
+            'Define target distribution P(x)',
+            'Sample many points from distribution',
+            'Estimate expectation: E[f(x)] ≈ (1/N) Σ f(xᵢ)',
+            'More samples = better estimate',
+            'Used when exact computation is intractable'
+          ],
+          example: 'Estimate integral: ∫ f(x)P(x)dx ≈ (1/N) Σ f(xᵢ) where xᵢ ~ P(x)',
+          code: `# Monte Carlo estimation
+import numpy as np
+from scipy.stats import norm
+
+# Sample from distribution
+samples = norm.rvs(loc=0, scale=1, size=10000)
+
+# Estimate expectation
+def f(x):
+    return x**2
+
+expectation = np.mean(f(samples))
+
+# True value: E[X²] = Var(X) + E[X]² = 1 + 0 = 1`,
+          realWorld: 'Bayesian inference, reinforcement learning, uncertainty propagation',
+          visual: 'Shows samples from distribution and estimated statistics'
+        },
+        {
+          title: 'Confidence Intervals & Prediction Intervals',
+          icon: <Gauge className="w-6 h-6" />,
+          description: 'Use distributions to quantify prediction uncertainty',
+          stepByStep: [
+            'Assume prediction errors follow distribution (e.g., Normal)',
+            'Estimate distribution parameters from residuals',
+            'Compute confidence interval: [μ - z×σ, μ + z×σ]',
+            '95% CI: z = 1.96 (for Normal distribution)',
+            'Provides uncertainty bounds for predictions'
+          ],
+          example: 'House price prediction: $300K ± $20K (95% confidence interval)',
+          code: `# Prediction intervals
+from scipy.stats import norm
+
+# Predictions
+y_pred = model.predict(X_test)
+
+# Residuals (errors)
+residuals = y_test - y_pred
+
+# Estimate error distribution
+error_mean = np.mean(residuals)
+error_std = np.std(residuals)
+
+# 95% prediction interval
+z = 1.96
+lower_bound = y_pred - z * error_std
+upper_bound = y_pred + z * error_std`,
+          realWorld: 'Risk assessment, decision making, uncertainty quantification',
+          visual: 'Shows predictions with confidence intervals'
         }
       ]
     },
@@ -391,6 +1423,70 @@ predictions = model.predict(X_test)
 # Predict class with max P(y|x)`,
           realWorld: 'Text classification, spam filtering, sentiment analysis, medical diagnosis',
           visual: 'Shows probability distributions and Bayes theorem calculation'
+        },
+        {
+          title: 'Polynomial Regression: Non-Linear Relationships',
+          icon: <TrendingUp className="w-6 h-6" />,
+          description: 'Using polynomial features to capture non-linear relationships',
+          stepByStep: [
+            'Create polynomial features: x, x², x³, ...',
+            'Use linear algebra: X_poly = [x, x², x³, ...]',
+            'Apply linear regression: ŷ = X_poly × θ',
+            'Optimize using calculus (gradient descent)',
+            'Higher degree = more complex, risk of overfitting'
+          ],
+          example: 'House price vs size: Linear might underfit. Polynomial degree 2-3 captures curvature.',
+          code: `# Polynomial Regression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+
+# Create polynomial features
+poly = PolynomialFeatures(degree=3)
+X_poly = poly.fit_transform(X)
+
+# Apply linear regression
+model = LinearRegression()
+model.fit(X_poly, y)
+
+# Prediction uses polynomial features
+y_pred = model.predict(poly.transform(X_test))`,
+          realWorld: 'Non-linear regression, curve fitting, relationship modeling',
+          visual: 'Shows polynomial curves of different degrees fitting data'
+        },
+        {
+          title: 'Multi-Layer Perceptron: Combining Foundations',
+          icon: <Network className="w-6 h-6" />,
+          description: 'Neural networks combine all mathematical foundations',
+          stepByStep: [
+            'Linear Algebra: Each layer = matrix multiplication',
+            'Non-linearity: Activation functions (sigmoid, ReLU)',
+            'Calculus: Backpropagation uses chain rule for gradients',
+            'Probability: Output probabilities for classification',
+            'Optimization: Gradient descent updates all weights'
+          ],
+          example: 'MLP for image classification: Linear algebra (matrix ops) + Calculus (backprop) + Probability (softmax)',
+          code: `# Multi-Layer Perceptron
+import torch.nn as nn
+
+class MLP(nn.Module):
+    def __init__(self):
+        super().__init__()
+        # Linear Algebra: matrix multiplication layers
+        self.fc1 = nn.Linear(784, 256)  # Linear transformation
+        self.fc2 = nn.Linear(256, 128)
+        self.fc3 = nn.Linear(128, 10)
+    
+    def forward(self, x):
+        # Linear Algebra: X @ W + b
+        x = nn.functional.relu(self.fc1(x))  # Non-linearity
+        x = nn.functional.relu(self.fc2(x))
+        # Probability: softmax for classification
+        x = nn.functional.softmax(self.fc3(x), dim=1)
+        return x
+
+# Training uses Calculus (backpropagation) and Optimization (gradient descent)`,
+          realWorld: 'All neural network applications: image recognition, NLP, recommendation systems',
+          visual: 'Shows how all mathematical foundations combine in neural networks'
         }
       ],
       'key-concepts': [
@@ -477,6 +1573,84 @@ model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
 model.fit(X_train, y_train)`,
           realWorld: 'Image recognition, document classification, medical diagnosis with multiple diseases',
           visual: 'Shows decision boundaries for multiple classes'
+        },
+        {
+          title: 'Decision Trees for Interpretable Classification',
+          icon: <Network className="w-6 h-6" />,
+          description: 'Using decision trees for interpretable, rule-based classification',
+          stepByStep: [
+            'Split data based on feature values',
+            'Choose splits that maximize information gain',
+            'Recursively build tree until stopping criteria',
+            'Leaf nodes predict class',
+            'Tree structure provides interpretable rules'
+          ],
+          example: 'Medical diagnosis: "If age > 50 AND blood_pressure > 140 THEN high_risk"',
+          code: `# Decision Tree
+from sklearn.tree import DecisionTreeClassifier
+
+tree = DecisionTreeClassifier(max_depth=5, min_samples_split=10)
+tree.fit(X_train, y_train)
+
+# Interpretable rules
+from sklearn.tree import export_text
+rules = export_text(tree, feature_names=feature_names)
+print(rules)  # Shows if-then rules`,
+          realWorld: 'Medical diagnosis, credit scoring, interpretable ML, rule-based systems',
+          visual: 'Shows tree structure with decision rules'
+        },
+        {
+          title: 'K-Nearest Neighbors (KNN) for Instance-Based Learning',
+          icon: <Users className="w-6 h-6" />,
+          description: 'Using KNN for simple, non-parametric classification/regression',
+          stepByStep: [
+            'Store all training examples',
+            'For new sample, find k nearest neighbors',
+            'For classification: majority vote of neighbors',
+            'For regression: average of neighbors',
+            'No explicit training phase (lazy learning)'
+          ],
+          example: 'Recommendation: Find 5 users most similar to you, recommend what they liked.',
+          code: `# K-Nearest Neighbors
+from sklearn.neighbors import KNeighborsClassifier
+
+knn = KNeighborsClassifier(n_neighbors=5)
+knn.fit(X_train, y_train)
+
+# Prediction finds k nearest neighbors
+predictions = knn.predict(X_test)
+
+# For regression
+from sklearn.neighbors import KNeighborsRegressor
+knn_reg = KNeighborsRegressor(n_neighbors=5)`,
+          realWorld: 'Recommendation systems, pattern recognition, simple baseline models',
+          visual: 'Shows k nearest neighbors for a query point'
+        },
+        {
+          title: 'Gradient Boosting: Sequential Model Building',
+          icon: <TrendingUp className="w-6 h-6" />,
+          description: 'Building strong models by combining weak learners sequentially',
+          stepByStep: [
+            'Train initial weak model (e.g., shallow tree)',
+            'Calculate residuals (errors)',
+            'Train next model to predict residuals',
+            'Add to ensemble: F(x) = F_prev(x) + α × h(x)',
+            'Repeat until convergence'
+          ],
+          example: 'XGBoost, LightGBM: Sequentially add trees that correct previous errors.',
+          code: `# Gradient Boosting
+from sklearn.ensemble import GradientBoostingClassifier
+
+gbm = GradientBoostingClassifier(
+    n_estimators=100,
+    learning_rate=0.1,
+    max_depth=3
+)
+gbm.fit(X_train, y_train)
+
+# Each tree corrects errors of previous trees`,
+          realWorld: 'XGBoost, LightGBM, CatBoost - state-of-the-art for tabular data',
+          visual: 'Shows sequential addition of trees correcting errors'
         }
       ],
       'loss-functions': [
@@ -530,6 +1704,87 @@ for epoch in range(num_epochs):
         param = param - learning_rate * grad`,
           realWorld: 'All supervised learning algorithms: neural networks, linear/logistic regression, SVM',
           visual: 'Shows loss decreasing over training iterations'
+        },
+        {
+          title: 'Robust Loss Functions for Outliers',
+          icon: <Shield className="w-6 h-6" />,
+          description: 'Using robust loss functions when data contains outliers',
+          stepByStep: [
+            'Identify if data has outliers (check distribution)',
+            'For regression with outliers: Use MAE or Huber loss instead of MSE',
+            'MAE is less sensitive to outliers than MSE',
+            'Huber loss combines benefits of MSE and MAE',
+            'Robust loss prevents outliers from dominating training'
+          ],
+          example: 'House price prediction: A few mansions ($10M) shouldn\'t dominate training. Use MAE instead of MSE.',
+          code: `# Robust loss functions
+# Mean Absolute Error (robust to outliers)
+mae = np.mean(np.abs(y_pred - y_true))
+
+# Huber Loss (combines MSE and MAE)
+def huber_loss(y_pred, y_true, delta=1.0):
+    error = y_pred - y_true
+    is_small = np.abs(error) <= delta
+    squared_loss = 0.5 * error**2
+    linear_loss = delta * (np.abs(error) - 0.5 * delta)
+    return np.mean(np.where(is_small, squared_loss, linear_loss))`,
+          realWorld: 'Financial data, sensor data, real-world datasets with anomalies',
+          visual: 'Shows how different loss functions handle outliers'
+        },
+        {
+          title: 'Focal Loss for Class Imbalance',
+          icon: <Target className="w-6 h-6" />,
+          description: 'Using focal loss to handle imbalanced classification problems',
+          stepByStep: [
+            'Standard cross-entropy treats all samples equally',
+            'Focal loss down-weights easy examples',
+            'Focuses learning on hard examples',
+            'Reduces impact of class imbalance',
+            'Improves performance on rare classes'
+          ],
+          example: 'Medical diagnosis: 99% healthy, 1% disease. Focal loss focuses on rare disease cases.',
+          code: `# Focal Loss for class imbalance
+def focal_loss(y_true, y_pred, alpha=0.25, gamma=2.0):
+    # Cross-entropy
+    ce = -y_true * np.log(y_pred) - (1 - y_true) * np.log(1 - y_pred)
+    
+    # Focal term: down-weight easy examples
+    p_t = y_true * y_pred + (1 - y_true) * (1 - y_pred)
+    focal_weight = (1 - p_t)**gamma
+    
+    # Alpha weighting for class imbalance
+    alpha_t = y_true * alpha + (1 - y_true) * (1 - alpha)
+    
+    return np.mean(alpha_t * focal_weight * ce)`,
+          realWorld: 'Object detection, medical diagnosis, fraud detection, rare event prediction',
+          visual: 'Shows how focal loss focuses on hard examples'
+        },
+        {
+          title: 'Custom Loss Functions for Business Goals',
+          icon: <Settings className="w-6 h-6" />,
+          description: 'Designing loss functions that align with business objectives',
+          stepByStep: [
+            'Identify business objective (e.g., maximize profit, minimize false negatives)',
+            'Design loss function that penalizes costly mistakes',
+            'Weight different types of errors differently',
+            'Train model with custom loss',
+            'Evaluate on business metrics, not just accuracy'
+          ],
+          example: 'Fraud detection: False negative (missed fraud) costs $1000, false positive costs $1. Weight loss accordingly.',
+          code: `# Custom loss function for business goals
+def business_loss(y_true, y_pred, fn_cost=1000, fp_cost=1):
+    # False negatives: predicted negative, actually positive
+    fn = np.sum((y_pred == 0) & (y_true == 1)) * fn_cost
+    
+    # False positives: predicted positive, actually negative
+    fp = np.sum((y_pred == 1) & (y_true == 0)) * fp_cost
+    
+    return fn + fp
+
+# Use in training
+# Modify standard loss to incorporate business costs`,
+          realWorld: 'Fraud detection, medical diagnosis, recommendation systems, any cost-sensitive application',
+          visual: 'Shows how custom loss aligns with business objectives'
         }
       ],
       'model-evaluation': [
@@ -586,6 +1841,99 @@ optimal_idx = np.argmax(f1_scores)
 optimal_threshold = thresholds[optimal_idx]`,
           realWorld: 'All binary classification problems require threshold tuning',
           visual: 'Shows how threshold affects precision and recall'
+        },
+        {
+          title: 'Regression Model Evaluation',
+          icon: <TrendingUp className="w-6 h-6" />,
+          description: 'Using RMSE, MAE, and R² to evaluate regression models',
+          stepByStep: [
+            'Split data into train/validation/test sets',
+            'Train regression model on training set',
+            'Make predictions on test set',
+            'Calculate RMSE: sqrt(mean((y_pred - y_true)²))',
+            'Calculate MAE: mean(|y_pred - y_true|)',
+            'Calculate R²: measures explained variance'
+          ],
+          example: 'House price prediction: RMSE = $50K means average error is $50K. R² = 0.85 means model explains 85% variance.',
+          code: `# Regression metrics
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+
+# Root Mean Squared Error
+rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+
+# Mean Absolute Error
+mae = mean_absolute_error(y_true, y_pred)
+
+# R-squared (coefficient of determination)
+r2 = r2_score(y_true, y_pred)
+
+# Interpretation:
+# RMSE: Lower is better, in same units as target
+# MAE: Lower is better, robust to outliers
+# R²: Higher is better, 1.0 = perfect, 0.0 = baseline`,
+          realWorld: 'Price prediction, demand forecasting, time series prediction, any regression problem',
+          visual: 'Shows predicted vs actual values with error metrics'
+        },
+        {
+          title: 'Multi-Class Classification Metrics',
+          icon: <Target className="w-6 h-6" />,
+          description: 'Evaluating models with more than two classes',
+          stepByStep: [
+            'Build confusion matrix for all classes',
+            'Calculate per-class precision, recall, F1',
+            'Calculate macro-averaged metrics (average across classes)',
+            'Calculate micro-averaged metrics (pool all predictions)',
+            'Use appropriate averaging based on class imbalance'
+          ],
+          example: 'Image classification: 10 classes (cat, dog, bird, ...). Calculate metrics for each class and average.',
+          code: `# Multi-class metrics
+from sklearn.metrics import classification_report, confusion_matrix
+
+# Confusion matrix
+cm = confusion_matrix(y_true, y_pred)
+
+# Classification report (per-class metrics)
+report = classification_report(y_true, y_pred, 
+                              target_names=['cat', 'dog', 'bird', ...])
+
+# Macro-averaged F1 (treats all classes equally)
+from sklearn.metrics import f1_score
+macro_f1 = f1_score(y_true, y_pred, average='macro')
+
+# Micro-averaged F1 (pools all predictions)
+micro_f1 = f1_score(y_true, y_pred, average='micro')`,
+          realWorld: 'Image classification, document categorization, medical diagnosis with multiple diseases',
+          visual: 'Shows multi-class confusion matrix and per-class metrics'
+        },
+        {
+          title: 'Learning Curves for Model Diagnosis',
+          icon: <Activity className="w-6 h-6" />,
+          description: 'Using learning curves to diagnose bias-variance issues',
+          stepByStep: [
+            'Train model on increasing training set sizes',
+            'Calculate training and validation scores at each size',
+            'Plot learning curves (score vs training size)',
+            'Analyze gap between curves: large gap = overfitting',
+            'Analyze convergence: both curves plateau = need more data or better features'
+          ],
+          example: 'If validation score plateaus but training score keeps improving → overfitting. If both plateau → underfitting.',
+          code: `# Learning curves
+from sklearn.model_selection import learning_curve
+import matplotlib.pyplot as plt
+
+train_sizes, train_scores, val_scores = learning_curve(
+    model, X, y, cv=5, n_jobs=-1,
+    train_sizes=np.linspace(0.1, 1.0, 10)
+)
+
+# Plot
+plt.plot(train_sizes, train_scores.mean(axis=1), label='Training')
+plt.plot(train_sizes, val_scores.mean(axis=1), label='Validation')
+plt.xlabel('Training Set Size')
+plt.ylabel('Score')
+plt.legend()`,
+          realWorld: 'Model diagnosis, determining if more data will help, detecting overfitting/underfitting',
+          visual: 'Shows learning curves with training and validation scores'
         }
       ],
       'bias-variance': [
@@ -639,6 +1987,92 @@ std_score = scores.std()
 # Reduces variance in performance estimate`,
           realWorld: 'Model selection, hyperparameter tuning, feature selection',
           visual: 'Shows data splits and validation scores across folds'
+        },
+        {
+          title: 'Ensemble Methods to Reduce Variance',
+          icon: <Layers className="w-6 h-6" />,
+          description: 'Using ensemble methods to reduce variance without increasing bias',
+          stepByStep: [
+            'Train multiple models on different subsets of data',
+            'Each model has high variance but low bias',
+            'Average predictions from all models',
+            'Variance reduces by factor of 1/n (n = number of models)',
+            'Bias stays the same (average of low bias = low bias)'
+          ],
+          example: 'Random Forest: 100 decision trees, each trained on bootstrap sample. Average predictions reduces variance.',
+          code: `# Ensemble to reduce variance
+from sklearn.ensemble import RandomForestClassifier, BaggingClassifier
+
+# Random Forest (reduces variance)
+rf = RandomForestClassifier(n_estimators=100, random_state=42)
+rf.fit(X_train, y_train)
+
+# Bagging (Bootstrap Aggregating)
+bagging = BaggingClassifier(base_estimator=DecisionTreeClassifier(),
+                            n_estimators=100)
+bagging.fit(X_train, y_train)
+
+# Variance reduction: Var(avg) = Var(individual) / n`,
+          realWorld: 'Random forests, bagging, boosting - all reduce variance through ensemble',
+          visual: 'Shows how ensemble averaging reduces prediction variance'
+        },
+        {
+          title: 'Early Stopping to Prevent Overfitting',
+          icon: <Gauge className="w-6 h-6" />,
+          description: 'Stopping training when validation loss stops improving',
+          stepByStep: [
+            'Monitor validation loss during training',
+            'If validation loss stops improving (or increases), stop training',
+            'Prevents model from overfitting to training data',
+            'Saves computation time',
+            'Returns model with best validation performance'
+          ],
+          example: 'Neural network: Stop training when validation loss plateaus, even if training loss keeps decreasing.',
+          code: `# Early stopping
+from tensorflow.keras.callbacks import EarlyStopping
+
+early_stopping = EarlyStopping(
+    monitor='val_loss',
+    patience=10,  # Wait 10 epochs without improvement
+    restore_best_weights=True
+)
+
+model.fit(X_train, y_train,
+          validation_data=(X_val, y_val),
+          epochs=100,
+          callbacks=[early_stopping])`,
+          realWorld: 'Neural networks, gradient boosting, any iterative training algorithm',
+          visual: 'Shows training stopping when validation loss plateaus'
+        },
+        {
+          title: 'Data Augmentation to Reduce Variance',
+          icon: <Image className="w-6 h-6" />,
+          description: 'Increasing effective training data size through augmentation',
+          stepByStep: [
+            'Identify data augmentation techniques (rotation, flipping, noise)',
+            'Apply random augmentations during training',
+            'Effectively increases training set size',
+            'Reduces variance by exposing model to more variations',
+            'Doesn\'t increase bias (augmentations preserve label)'
+          ],
+          example: 'Image classification: Rotate, flip, crop images. Model sees more variations, reduces overfitting.',
+          code: `# Data augmentation
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+# Augmentation for images
+datagen = ImageDataGenerator(
+    rotation_range=20,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    horizontal_flip=True,
+    zoom_range=0.2
+)
+
+# Apply during training
+model.fit(datagen.flow(X_train, y_train, batch_size=32),
+          epochs=100)`,
+          realWorld: 'Image classification, NLP (text augmentation), any domain with augmentation techniques',
+          visual: 'Shows original and augmented images'
         }
       ],
       'regularization': [
@@ -712,6 +2146,98 @@ elastic.fit(X_train, y_train)
 # l1_ratio = 0.5 → Balanced`,
           realWorld: 'High-dimensional datasets where both feature selection and overfitting prevention needed',
           visual: 'Shows combined effect of L1 and L2 penalties'
+        },
+        {
+          title: 'Dropout Regularization in Neural Networks',
+          icon: <Network className="w-6 h-6" />,
+          description: 'Using dropout to prevent overfitting in neural networks',
+          stepByStep: [
+            'Randomly set some neurons to zero during training',
+            'Dropout rate: probability of setting neuron to zero (e.g., 0.5 = 50%)',
+            'Prevents neurons from co-adapting',
+            'Forces network to learn redundant representations',
+            'During inference: use all neurons but scale by dropout rate'
+          ],
+          example: 'Deep neural network: Dropout 0.5 means each neuron has 50% chance of being dropped during training.',
+          code: `# Dropout in neural networks
+import torch.nn as nn
+
+class Net(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.fc1 = nn.Linear(784, 256)
+        self.dropout1 = nn.Dropout(0.5)  # 50% dropout
+        self.fc2 = nn.Linear(256, 128)
+        self.dropout2 = nn.Dropout(0.3)  # 30% dropout
+        self.fc3 = nn.Linear(128, 10)
+    
+    def forward(self, x):
+        x = nn.functional.relu(self.fc1(x))
+        x = self.dropout1(x)  # Applied during training
+        x = nn.functional.relu(self.fc2(x))
+        x = self.dropout2(x)
+        x = self.fc3(x)
+        return x`,
+          realWorld: 'Deep neural networks, CNNs, RNNs, transformers - all benefit from dropout',
+          visual: 'Shows neurons being randomly dropped during training'
+        },
+        {
+          title: 'Weight Decay in Deep Learning',
+          icon: <Settings className="w-6 h-6" />,
+          description: 'Applying L2 regularization (weight decay) in neural networks',
+          stepByStep: [
+            'Add L2 penalty to loss function: λ × Σw²',
+            'Or use weight_decay parameter in optimizer',
+            'Penalizes large weights',
+            'Prevents weights from growing too large',
+            'Encourages simpler, more generalizable models'
+          ],
+          example: 'Training neural network: weight_decay=0.0001 prevents weights from exploding, improves generalization.',
+          code: `# Weight decay (L2 regularization) in PyTorch
+import torch.optim as optim
+
+# Weight decay in optimizer
+optimizer = optim.SGD(model.parameters(),
+                     lr=0.01,
+                     weight_decay=0.0001)  # L2 penalty
+
+# Or in TensorFlow/Keras
+model.compile(
+    optimizer=tf.keras.optimizers.SGD(learning_rate=0.01, weight_decay=0.0001),
+    loss='categorical_crossentropy'
+)`,
+          realWorld: 'All deep learning: CNNs, RNNs, transformers, any neural network',
+          visual: 'Shows weight distributions with and without weight decay'
+        },
+        {
+          title: 'Batch Normalization as Regularization',
+          icon: <Activity className="w-6 h-6" />,
+          description: 'Using batch normalization for regularization effect',
+          stepByStep: [
+            'Normalize activations within each mini-batch',
+            'Adds noise to activations (regularization effect)',
+            'Reduces internal covariate shift',
+            'Allows higher learning rates',
+            'Acts as implicit regularization'
+          ],
+          example: 'Deep CNN: Batch normalization after each conv layer reduces overfitting and speeds up training.',
+          code: `# Batch Normalization
+import torch.nn as nn
+
+class CNN(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 64, 3)
+        self.bn1 = nn.BatchNorm2d(64)  # Batch normalization
+        self.conv2 = nn.Conv2d(64, 128, 3)
+        self.bn2 = nn.BatchNorm2d(128)
+    
+    def forward(self, x):
+        x = self.bn1(nn.functional.relu(self.conv1(x)))
+        x = self.bn2(nn.functional.relu(self.conv2(x)))
+        return x`,
+          realWorld: 'Deep CNNs, ResNets, all modern deep learning architectures',
+          visual: 'Shows activations before and after batch normalization'
         }
       ]
     },

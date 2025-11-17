@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Brain, Network, Image, MessageSquare, TrendingUp, Layers, Zap } from 'lucide-react';
+import { Brain, Network, Image, MessageSquare, TrendingUp, Layers, Zap, Users, Globe, Search, BarChart3, Share2 } from 'lucide-react';
 
 export default function MLUseCases({ operationType }) {
   const useCases = {
@@ -139,6 +139,147 @@ top_k = eigenvectors[:, np.argsort(eigenvalues)[-k:]]`,
 # Compressed: (height, k) where k << width
 compressed = image @ top_eigenvectors`,
         realWorld: 'Image compression, feature engineering, reducing overfitting'
+      },
+      {
+        title: 'Eigenfaces for Face Recognition',
+        icon: <Users className="w-6 h-6" />,
+        description: 'Eigenvectors of face image covariance matrix represent principal face variations',
+        example: 'Each eigenface captures a different facial feature variation',
+        code: `# Eigenfaces algorithm
+# 1. Collect face images, flatten to vectors
+faces_matrix = np.array([flatten(face) for face in faces])
+# 2. Compute covariance matrix
+cov = np.cov(faces_matrix.T)
+# 3. Find eigenvectors (eigenfaces)
+eigenvalues, eigenfaces = np.linalg.eig(cov)
+# 4. Project new face onto eigenfaces
+face_projection = new_face @ top_eigenfaces`,
+        realWorld: 'Biometric security, photo organization, surveillance systems, social media tagging'
+      },
+      {
+        title: 'PageRank Algorithm',
+        icon: <Globe className="w-6 h-6" />,
+        description: 'Eigenvector of web graph adjacency matrix ranks page importance',
+        example: 'Dominant eigenvector gives stationary distribution of random surfer',
+        code: `# PageRank using power iteration (eigenvector method)
+# Transition matrix P represents web links
+# PageRank = dominant eigenvector of P
+def pagerank(adjacency_matrix, damping=0.85):
+    n = len(adjacency_matrix)
+    # Create transition matrix
+    P = damping * adjacency_matrix + (1-damping)/n
+    # Find dominant eigenvector
+    eigenvals, eigenvecs = np.linalg.eig(P.T)
+    # Return eigenvector corresponding to eigenvalue 1
+    return eigenvecs[:, np.argmax(eigenvals)]`,
+        realWorld: 'Google search ranking, social network analysis, citation networks, recommendation systems'
+      },
+      {
+        title: 'Spectral Clustering',
+        icon: <Network className="w-6 h-6" />,
+        description: 'Uses eigenvectors of graph Laplacian to find clusters in data',
+        example: 'Eigenvectors reveal natural groupings in complex data structures',
+        code: `# Spectral clustering
+from sklearn.cluster import SpectralClustering
+# Compute similarity graph
+similarity_matrix = compute_similarity(data)
+# Graph Laplacian
+laplacian = degree_matrix - similarity_matrix
+# Find k smallest eigenvalues and eigenvectors
+eigenvals, eigenvecs = np.linalg.eig(laplacian)
+# Cluster in eigenvector space
+clusters = kmeans(eigenvecs[:, :k], n_clusters)`,
+        realWorld: 'Image segmentation, community detection, gene clustering, network analysis'
+      },
+      {
+        title: 'Singular Value Decomposition (SVD)',
+        icon: <BarChart3 className="w-6 h-6" />,
+        description: 'SVD decomposes matrices using eigenvalues/eigenvectors of A^T A and AA^T',
+        example: 'Eigenvalues of covariance matrices give singular values',
+        code: `# SVD for matrix factorization
+# A = U Σ V^T
+# Where U, V are eigenvectors, Σ contains eigenvalues
+U, s, Vt = np.linalg.svd(matrix)
+# s contains singular values (square roots of eigenvalues)
+# U and V are eigenvectors of AA^T and A^T A respectively`,
+        realWorld: 'Recommender systems (Netflix, Amazon), topic modeling, noise reduction, matrix completion'
+      },
+      {
+        title: 'Linear Discriminant Analysis (LDA)',
+        icon: <TrendingUp className="w-6 h-6" />,
+        description: 'Eigenvectors of between-class scatter matrix maximize class separation',
+        example: 'Finds directions that best separate different classes',
+        code: `# LDA for classification
+# Compute between-class scatter matrix
+Sb = compute_between_class_scatter(classes)
+# Compute within-class scatter matrix
+Sw = compute_within_class_scatter(classes)
+# Solve generalized eigenvalue problem: Sb v = λ Sw v
+eigenvals, eigenvecs = scipy.linalg.eig(Sb, Sw)
+# Select top eigenvectors for projection
+projection_matrix = eigenvecs[:, :k]`,
+        realWorld: 'Face recognition, medical diagnosis, spam filtering, feature extraction for classification'
+      },
+      {
+        title: 'Graph Neural Networks',
+        icon: <Network className="w-6 h-6" />,
+        description: 'Eigenvalues of graph Laplacian encode structural properties of graphs',
+        example: 'Graph spectrum (eigenvalues) captures graph topology and connectivity',
+        code: `# Graph Laplacian eigenvalues
+import torch_geometric
+# Compute graph Laplacian
+L = degree_matrix - adjacency_matrix
+# Eigenvalues encode graph structure
+eigenvals, eigenvecs = torch.linalg.eig(L)
+# Use in graph convolution
+# Eigenvalues determine frequency response of filters
+graph_features = graph_conv(node_features, eigenvals, eigenvecs)`,
+        realWorld: 'Molecular property prediction, social network analysis, recommendation systems, knowledge graphs'
+      },
+      {
+        title: 'Recommender Systems',
+        icon: <Share2 className="w-6 h-6" />,
+        description: 'SVD uses eigenvalues to factorize user-item matrices for recommendations',
+        example: 'Eigenvalues identify latent factors (genres, preferences) in user behavior',
+        code: `# Collaborative filtering with SVD
+# User-item matrix R
+U, s, Vt = np.linalg.svd(user_item_matrix)
+# Keep top k singular values (eigenvalues)
+U_k = U[:, :k]
+V_k = Vt[:k, :].T
+# Reconstruct: R ≈ U_k @ diag(s[:k]) @ V_k.T
+predictions = U_k @ np.diag(s[:k]) @ V_k.T`,
+        realWorld: 'Netflix movie recommendations, Amazon product suggestions, Spotify playlists, YouTube video recommendations'
+      },
+      {
+        title: 'Network Analysis & Centrality',
+        icon: <Network className="w-6 h-6" />,
+        description: 'Eigenvector centrality uses dominant eigenvector to identify influential nodes',
+        example: 'Nodes with high eigenvector centrality are connected to other important nodes',
+        code: `# Eigenvector centrality
+# Adjacency matrix A
+# Centrality vector x satisfies: Ax = λx
+# Dominant eigenvector gives centrality scores
+eigenvals, eigenvecs = np.linalg.eig(adjacency_matrix)
+dominant_eigenvec = eigenvecs[:, np.argmax(eigenvals)]
+centrality_scores = np.abs(dominant_eigenvec)`,
+        realWorld: 'Social media influence ranking, disease spread modeling, infrastructure analysis, viral marketing'
+      },
+      {
+        title: 'Time Series Analysis',
+        icon: <TrendingUp className="w-6 h-6" />,
+        description: 'Eigenvalues of correlation matrices identify dominant patterns in time series',
+        example: 'Principal components capture main trends and seasonal patterns',
+        code: `# Time series PCA
+# Stack time series into matrix (time × variables)
+time_series_matrix = np.array([ts1, ts2, ..., tsn]).T
+# Compute correlation matrix
+correlation = np.corrcoef(time_series_matrix.T)
+# Find eigenvalues and eigenvectors
+eigenvals, eigenvecs = np.linalg.eig(correlation)
+# Principal components reveal dominant patterns
+principal_patterns = time_series_matrix @ eigenvecs[:, :k]`,
+        realWorld: 'Stock market analysis, weather forecasting, sensor data analysis, economic indicators'
       }
     ],
     'data-representation': [
